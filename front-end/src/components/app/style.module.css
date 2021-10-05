@@ -1,0 +1,45 @@
+* {
+    box-sizing: border-box;
+    margin: 0px;
+}
+
+body {
+    /* position: relative; */
+    background-color: gray;
+}
+
+.container {
+    display: flex;
+    background-color: aqua;
+    width: 500px;
+    height: 200px;
+    margin: 50px;
+    margin-top: 300px;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.one {
+    background-color: red;
+    width: 100px;
+    height: 100px;
+    box-shadow: 20px 10px yellow;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+}
+
+.two {
+    background-color: yellow;
+    width: 100px;
+    height: 100px;
+    position: fixed;
+    right: 0px;
+    top: -100px;
+}
+
+.three {
+    background-color: brown;
+    width: 100px;
+    height: 100px;
+}
