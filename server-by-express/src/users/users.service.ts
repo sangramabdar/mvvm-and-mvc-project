@@ -1,16 +1,16 @@
+import { UserDao, UserEntity } from "../Dao/UserDao";
 import Result from "../helper/result";
-import { IUserDao, UserDao, UserEntity } from "./users.model";
+import { userValidation } from "../helper/validation";
 
-class UsersService<T> {
-  static userDao: IUserDao;
+class UsersService {
+  private userDao: UserDao;
 
+  constructor() {
+    this.userDao = new UserDao();
+  }
   async addUser(user: UserEntity) {
     try {
-      if (!(user.name && user.age))
-        return Result("not valid information provided");
-
-      await UsersService.userDao.addUser(user);
-
+      await this.userDao.add(user);
       return Result(null, "added");
     } catch (error) {
       return Result(error.message, null);
@@ -19,7 +19,7 @@ class UsersService<T> {
 
   async getUsers() {
     try {
-      const users = await UsersService.userDao.getUsers();
+      const users = await this.userDao.get();
       return Result(null, users);
     } catch (e) {
       console.log(e.message);
@@ -32,7 +32,7 @@ class UsersService<T> {
       if (!id) {
         return Result("plz provide id in request body");
       }
-      await UsersService.userDao.deleteUser(id);
+      await this.userDao.deleteById(id);
       return Result(null, "deleted");
     } catch (error) {
       return Result(error.message, null);
@@ -41,17 +41,14 @@ class UsersService<T> {
 
   async updateUser(id: string, user: UserEntity) {
     try {
-      if (!id || !user) {
-        return Result("plz provide id and value in request body");
-      }
-      await UsersService.userDao.updateUser(id, user);
+      //it throws error if input is not valid
+      userValidation(id, user);
+      await this.userDao.updateById(id, user);
       return Result(null, "updated");
     } catch (error) {
       return Result(error.message, null);
     }
   }
 }
-
-UsersService.userDao = new UserDao();
 
 export default UsersService;
