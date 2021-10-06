@@ -7,7 +7,7 @@ export type User = {
 };
 
 class UserRespository extends Repository<User> {
-  private static USER_URL = "http://localhost:3000/users";
+  private static USER_URL = "http://localhost:8080/users";
 
   constructor() {
     super(UserRespository.USER_URL);

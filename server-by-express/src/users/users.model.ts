@@ -3,7 +3,7 @@ import { db } from "../config/db";
 
 type UserEntity = {
   name: string;
-  age: string;
+  age: number;
 };
 
 interface IUserDao {
@@ -14,7 +14,7 @@ interface IUserDao {
 }
 
 class UserDao implements IUserDao {
-  static collection = "users2";
+  static collection = "users";
 
   async addUser(user: UserEntity) {
     await db.collection(UserDao.collection).insertOne(user);

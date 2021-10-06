@@ -4,8 +4,15 @@ import User from "../user/User";
 import AppViewModel from "./App.viewmodel";
 import style from "./style.module.css";
 function App(props) {
-  const { error, users, getUsers, onChangeHandler, addUser, deleteUserById } =
-    AppViewModel();
+  const {
+    error,
+    users,
+    getUsers,
+    onChangeHandler,
+    addUser,
+    deleteUserById,
+    updateUserById,
+  } = AppViewModel();
 
   return (
     <div>
@@ -25,6 +32,9 @@ function App(props) {
                 key={i}
                 deleteUser={e => {
                   deleteUserById(u._id);
+                }}
+                updateUser={e => {
+                  updateUserById(u._id);
                 }}
               />
             );

@@ -67,6 +67,16 @@ function AppViewModel() {
     getUsers();
   };
 
+  const updateUserById = async (id: string) => {
+    const user = { ...info };
+    const result = await userRepository.updateById(id, user);
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+    getUsers();
+  };
+
   return {
     state,
     increment,
@@ -77,6 +87,7 @@ function AppViewModel() {
     onChangeHandler,
     addUser,
     deleteUserById,
+    updateUserById,
   };
 }
 
