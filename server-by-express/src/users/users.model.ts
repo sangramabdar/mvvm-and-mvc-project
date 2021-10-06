@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { db } from "../config/db";
+import { userValidation } from "../helper/validation";
 
 type UserEntity = {
   name: string;
@@ -25,6 +26,10 @@ class UserDao implements IUserDao {
 
     if (!isValid) {
       throw new Error("wrong id");
+    }
+
+    if (!userValidation(user)) {
+      throw new Error("wrong info provided");
     }
 
     const _id = new ObjectId(id);

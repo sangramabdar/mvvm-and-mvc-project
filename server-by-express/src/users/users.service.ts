@@ -20,7 +20,6 @@ class UsersService<T> {
   async getUsers() {
     try {
       const users = await UsersService.userDao.getUsers();
-
       return Result(null, users);
     } catch (e) {
       console.log(e.message);
@@ -30,6 +29,9 @@ class UsersService<T> {
 
   async deleteUser(id: string) {
     try {
+      if (!id) {
+        return Result("plz provide id in request body");
+      }
       await UsersService.userDao.deleteUser(id);
       return Result(null, "deleted");
     } catch (error) {
@@ -38,8 +40,10 @@ class UsersService<T> {
   }
 
   async updateUser(id: string, user: UserEntity) {
-    console.log(user);
     try {
+      if (!id || !user) {
+        return Result("plz provide id and value in request body");
+      }
       await UsersService.userDao.updateUser(id, user);
       return Result(null, "updated");
     } catch (error) {

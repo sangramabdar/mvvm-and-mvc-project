@@ -19,7 +19,6 @@ export class UsersController {
 
   static async updateUser(req, res) {
     const { id, value } = req.body;
-    console.log(id, value);
 
     const r = await UsersController.userService.updateUser(id, value);
 
