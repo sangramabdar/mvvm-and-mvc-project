@@ -1,8 +1,8 @@
-import { UserModel } from "./users.model";
+import { UserEntity } from "./users.model";
 import UsersService from "./users.service";
 
 export class UsersController {
-  static userService: UsersService;
+  static userService: UsersService<UserEntity>;
 
   static async getUsers(req, res) {
     const result = await UsersController.userService.getUsers();
@@ -10,7 +10,7 @@ export class UsersController {
   }
 
   static async addUser(req, res) {
-    const user: UserModel = req.body;
+    const user: UserEntity = req.body;
 
     const r = await UsersController.userService.addUser(user);
 

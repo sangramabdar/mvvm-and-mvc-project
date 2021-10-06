@@ -1,17 +1,17 @@
 import Result from "../helper/result";
-import { IUserDao, UserDao, UserModel } from "./users.model";
+import { IUserDao, UserDao, UserEntity } from "./users.model";
 
-class UsersService {
+class UsersService<T> {
   static userDao: IUserDao;
 
-  async addUser(user: UserModel) {
+  async addUser(user: UserEntity) {
     try {
       if (!(user.name && user.age))
         return Result("not valid information provided");
 
       await UsersService.userDao.addUser(user);
 
-      return Result<string>(null, "added");
+      return Result(null, "added");
     } catch (error) {
       return Result(error.message, null);
     }
@@ -37,7 +37,7 @@ class UsersService {
     }
   }
 
-  async updateUser(id: string, user: UserModel) {
+  async updateUser(id: string, user: UserEntity) {
     console.log(user);
     try {
       await UsersService.userDao.updateUser(id, user);

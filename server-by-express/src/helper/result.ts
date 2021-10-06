@@ -5,7 +5,7 @@ export interface ResultType<T> {
 
 export default function Result<T>(
   e: string | null = null,
-  value: T | null = null,
+  value: T | null = null
 ): ResultType<T> {
   if (e) {
     return {

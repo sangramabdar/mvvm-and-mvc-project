@@ -1,26 +1,26 @@
 import { ObjectId } from "mongodb";
 import { db } from "../config/db";
 
-type UserModel = {
+type UserEntity = {
   name: string;
   age: string;
 };
 
 interface IUserDao {
   getUsers(): any;
-  addUser(user: UserModel);
-  updateUser(id: string, user: UserModel);
+  addUser(user: UserEntity);
+  updateUser(id: string, user: UserEntity);
   deleteUser(id: string);
 }
 
 class UserDao implements IUserDao {
   static collection = "users2";
 
-  async addUser(user: UserModel) {
+  async addUser(user: UserEntity) {
     await db.collection(UserDao.collection).insertOne(user);
   }
 
-  async updateUser(id: string, user: UserModel) {
+  async updateUser(id: string, user: UserEntity) {
     const isValid = ObjectId.isValid(id);
 
     if (!isValid) {
@@ -65,4 +65,4 @@ class UserDao implements IUserDao {
   }
 }
 
-export { UserModel, UserDao, IUserDao };
+export { UserEntity, UserDao, IUserDao };
