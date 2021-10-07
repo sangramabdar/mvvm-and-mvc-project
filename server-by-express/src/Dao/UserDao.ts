@@ -1,3 +1,4 @@
+import { injectable } from "tsyringe";
 import { Dao } from "./Dao";
 
 type UserEntity = {
@@ -5,6 +6,7 @@ type UserEntity = {
   age: number;
 };
 
+@injectable()
 class UserDao extends Dao<UserEntity> {
   private static URL = "users";
   constructor() {

@@ -1,13 +1,12 @@
+import "reflect-metadata";
+import { injectable } from "tsyringe";
 import { UserDao, UserEntity } from "../Dao/UserDao";
 import Result from "../helper/result";
 import { userValidation } from "../helper/validation";
 
+@injectable()
 class UsersService {
-  private userDao: UserDao;
-
-  constructor() {
-    this.userDao = new UserDao();
-  }
+  constructor(private userDao: UserDao) {}
   async addUser(user: UserEntity) {
     try {
       await this.userDao.add(user);

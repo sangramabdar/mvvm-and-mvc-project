@@ -1,15 +1,22 @@
 import { Db, MongoClient } from "mongodb";
 
-const url = "mongodb://localhost:27017";
-const dbName = "practice-expressjs";
+class Database {
+  private static readonly URL = "mongodb://localhost:27017";
+  private static readonly DB_NAME = "practice-expressjs";
+  private static db: Db;
 
-let db: Db;
+  static async connectToDatabse() {
+    const client = await new MongoClient(Database.URL, {
+      serverSelectionTimeoutMS: 2000,
+    }).connect();
+    if (!Database.db) {
+      Database.db = client.db(Database.DB_NAME);
+    }
+  }
 
-async function connectToDatabse() {
-  const client = await new MongoClient(url, {
-    serverSelectionTimeoutMS: 2000,
-  }).connect();
-  db = client.db(dbName);
+  static getDb(): Db {
+    return Database.db;
+  }
 }
 
-export { connectToDatabse, db };
+export default Database;

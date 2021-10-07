@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { db } from "../config/db";
+import Database from "../config/db";
 
 interface IDao<T> {
   get(): any;
@@ -15,7 +15,7 @@ class Dao<T> implements IDao<T> {
     this._collection = collection;
   }
   async add(element: T) {
-    await db.collection(this._collection).insertOne(element);
+    await Database.getDb().collection(this._collection).insertOne(element);
   }
 
   async updateById(id: string, element: T) {
@@ -27,14 +27,16 @@ class Dao<T> implements IDao<T> {
 
     const _id = new ObjectId(id);
 
-    const updateResult = await db.collection(this._collection).updateOne(
-      {
-        _id,
-      },
-      {
-        $set: element,
-      }
-    );
+    const updateResult = await Database.getDb()
+      .collection(this._collection)
+      .updateOne(
+        {
+          _id,
+        },
+        {
+          $set: element,
+        }
+      );
 
     if (updateResult.matchedCount == 0) {
       throw new Error("specified id is not there");
@@ -48,7 +50,7 @@ class Dao<T> implements IDao<T> {
       throw new Error("wrong id");
     }
 
-    const deleteResult = await db
+    const deleteResult = await Database.getDb()
       .collection(this._collection)
       .deleteOne({ _id: new ObjectId(id) });
 
@@ -58,7 +60,10 @@ class Dao<T> implements IDao<T> {
   }
 
   async get() {
-    const users = await db.collection(this._collection).find().toArray();
+    const users = await Database.getDb()
+      .collection(this._collection)
+      .find()
+      .toArray();
     return users;
   }
 }

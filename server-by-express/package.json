@@ -16,5 +16,9 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
-    "description": ""
+    "description": "",
+    "devDependencies": {
+        "reflect-metadata": "^0.1.13",
+        "tsyringe": "^4.6.0"
+    }
 }

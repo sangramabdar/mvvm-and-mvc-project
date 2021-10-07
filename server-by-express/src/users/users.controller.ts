@@ -1,15 +1,19 @@
+import "reflect-metadata";
+import { autoInjectable, container, inject, singleton } from "tsyringe";
+import { app } from "../config/initserver";
 import { UserEntity } from "../Dao/UserDao";
 import UsersService from "./users.service";
 
-export class UsersController {
-  static userService: UsersService = new UsersService();
+@singleton()
+class UsersController {
+  static userService: UsersService = container.resolve(UsersService);
 
-  static async getUsers(req, res) {
+  async getUsers(req, res) {
     const result = await UsersController.userService.getUsers();
     return res.json(result);
   }
 
-  static async addUser(req, res) {
+  async addUser(req, res) {
     const user: UserEntity = req.body;
 
     const r = await UsersController.userService.addUser(user);
@@ -17,7 +21,7 @@ export class UsersController {
     return res.json(r);
   }
 
-  static async updateUser(req, res) {
+  async updateUser(req, res) {
     const { id, value } = req.body;
 
     const r = await UsersController.userService.updateUser(id, value);
@@ -25,7 +29,7 @@ export class UsersController {
     return res.json(r);
   }
 
-  static async deleteUser(req, res) {
+  async deleteUser(req, res) {
     const id = req.body.id;
 
     const r = await UsersController.userService.deleteUser(id);
@@ -33,3 +37,5 @@ export class UsersController {
     return res.json(r);
   }
 }
+
+export { UsersController };
