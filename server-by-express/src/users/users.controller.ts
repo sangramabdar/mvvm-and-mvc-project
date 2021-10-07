@@ -2,7 +2,7 @@ import { UserEntity } from "../Dao/UserDao";
 import UsersService from "./users.service";
 
 export class UsersController {
-  static userService: UsersService;
+  static userService: UsersService = new UsersService();
 
   static async getUsers(req, res) {
     const result = await UsersController.userService.getUsers();
@@ -33,5 +33,3 @@ export class UsersController {
     return res.json(r);
   }
 }
-
-UsersController.userService = new UsersService();

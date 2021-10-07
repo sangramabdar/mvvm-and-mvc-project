@@ -1,5 +1,5 @@
 class AppService {
-  static async getApp() {
+  async getApp() {
     return "app";
   }
 }

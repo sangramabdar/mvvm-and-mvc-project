@@ -1,6 +1,5 @@
 import { ObjectId } from "mongodb";
 import { db } from "../config/db";
-import { userValidation } from "../helper/validation";
 
 interface IDao<T> {
   get(): any;

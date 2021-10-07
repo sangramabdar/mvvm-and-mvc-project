@@ -6,7 +6,9 @@ const dbName = "practice-expressjs";
 let db: Db;
 
 async function connectToDatabse() {
-  const client = await new MongoClient(url).connect();
+  const client = await new MongoClient(url, {
+    serverSelectionTimeoutMS: 2000,
+  }).connect();
   db = client.db(dbName);
 }
 
