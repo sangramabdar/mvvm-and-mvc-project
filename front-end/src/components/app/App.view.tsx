@@ -2,7 +2,7 @@ import React from "react";
 
 import User from "../user/User";
 import AppViewModel from "./App.viewmodel";
-import style from "./style.module.css";
+
 function App(props) {
   const {
     error,

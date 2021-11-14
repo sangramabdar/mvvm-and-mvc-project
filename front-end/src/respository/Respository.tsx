@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { ResultType, Result, ResultModifier } from "../helper/result";
+import { ResultType, Result } from "../helper/result";
 
 interface IRepository<T> {
   get(): Promise<ResultType<T[]>>;
@@ -23,7 +23,7 @@ class Repository<T> implements IRepository<T> {
       }
       const result = await r.data;
 
-      return ResultModifier(result);
+      return Result(null, result);
     } catch (error) {
       return Result(error.message);
     }
@@ -35,7 +35,7 @@ class Repository<T> implements IRepository<T> {
 
       const result = await r.data;
 
-      return ResultModifier(result);
+      return Result(result);
     } catch (error) {
       return Result(error.message);
     }
@@ -49,7 +49,7 @@ class Repository<T> implements IRepository<T> {
 
       const result = await r.data;
 
-      return ResultModifier(result);
+      return Result(result);
     } catch (error) {
       return Result(error.message);
     }
@@ -64,7 +64,7 @@ class Repository<T> implements IRepository<T> {
 
       const result = await r.data;
 
-      return ResultModifier(result);
+      return Result(result);
     } catch (error) {
       return Result(error.message);
     }
