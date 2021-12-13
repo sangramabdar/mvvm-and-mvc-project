@@ -10,6 +10,7 @@ async function initServer() {
     app.use(Express.json());
     await Database.connectToDatabse();
     await initRoutes();
+    console.log("server is initialized");
   } catch (error) {
     app.use("*", (req, res) => {
       return res.sendStatus(500);
