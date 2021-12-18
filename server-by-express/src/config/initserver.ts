@@ -1,5 +1,6 @@
 import Express from "express";
 import cors from "cors";
+
 import initRoutes from "./initRoutes";
 import Database from "./db";
 const app = Express();

@@ -11,12 +11,12 @@ class UserService {
   }
   async addUser(user: UserEntity) {
     try {
-      if (Object.keys(user).length == 0) return Result(null, "empty body");
+      if (Object.keys(user).length == 0) return Result("failure", "empty body");
 
       await this.userDao.add(user);
       return Result("success", "added");
     } catch (error: any) {
-      return Result("failure", error.message);
+      return Result<string>("failure", error.message);
     }
   }
 

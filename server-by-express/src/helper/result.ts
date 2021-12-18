@@ -1,11 +1,14 @@
-type State = "success" | "failure";
+type ResultState = "success" | "failure";
 
 export interface ResultType<T> {
-  state: State;
+  state: ResultState;
   payload: T;
 }
 
-export default function Result<T>(state: State, payload: T): ResultType<T> {
+export default function Result<T>(
+  state: ResultState,
+  payload: T
+): ResultType<T> {
   return {
     state,
     payload,
