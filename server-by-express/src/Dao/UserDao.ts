@@ -1,16 +1,16 @@
-import { injectable } from "tsyringe";
-import { Dao } from "./Dao";
+import { ObjectId } from "mongodb";
+import { DaoImpl } from "./Dao";
 
-type UserEntity = {
+interface UserEntity {
+  _id?: ObjectId;
   name: string;
   age: number;
-};
+}
 
-@injectable()
-class UserDao extends Dao<UserEntity> {
-  private static URL = "users";
+class UserDao extends DaoImpl<UserEntity> {
+  private static collection = "users";
   constructor() {
-    super(UserDao.URL);
+    super(UserDao.collection);
   }
 }
 

@@ -3,18 +3,20 @@ import { Db, MongoClient } from "mongodb";
 class Database {
   private static readonly URL = "mongodb://localhost:27017";
   private static readonly DB_NAME = "practice-expressjs";
-  private static db: Db;
+  private static db: Db | null = null;
 
   static async connectToDatabse() {
     const client = await new MongoClient(Database.URL, {
       serverSelectionTimeoutMS: 2000,
     }).connect();
-    if (!Database.db) {
-      Database.db = client.db(Database.DB_NAME);
-    }
+
+    Database.db = client.db(Database.DB_NAME);
   }
 
-  static getDb(): Db {
+  static async getDb(): Promise<Db> {
+    if (!Database.db) {
+      await this.connectToDatabse();
+    }
     return Database.db;
   }
 }

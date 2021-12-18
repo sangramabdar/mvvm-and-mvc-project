@@ -1,21 +1,23 @@
-import { ObjectId } from "mongodb";
+import { Document, ObjectId } from "mongodb";
 import Database from "../config/db";
+import { UserEntity } from "./UserDao";
 
-interface IDao<T> {
+interface Dao<T> {
   get(): any;
   add(element: T);
   updateById(id: string, element: T);
   deleteById(id: string);
 }
 
-class Dao<T> implements IDao<T> {
+class DaoImpl<T> implements Dao<T> {
   protected _collection: string;
 
   constructor(collection: string) {
     this._collection = collection;
   }
   async add(element: T) {
-    await Database.getDb().collection(this._collection).insertOne(element);
+    const db = await Database.getDb();
+    db.collection(this._collection).insertOne(element);
   }
 
   async updateById(id: string, element: T) {
@@ -26,17 +28,15 @@ class Dao<T> implements IDao<T> {
     }
 
     const _id = new ObjectId(id);
-
-    const updateResult = await Database.getDb()
-      .collection(this._collection)
-      .updateOne(
-        {
-          _id,
-        },
-        {
-          $set: element,
-        }
-      );
+    const db = await Database.getDb();
+    const updateResult = await db.collection(this._collection).updateOne(
+      {
+        _id,
+      },
+      {
+        $set: element,
+      }
+    );
 
     if (updateResult.matchedCount == 0) {
       throw new Error("specified id is not there");
@@ -49,8 +49,8 @@ class Dao<T> implements IDao<T> {
     if (!isValid) {
       throw new Error("wrong id");
     }
-
-    const deleteResult = await Database.getDb()
+    const db = await Database.getDb();
+    const deleteResult = await db
       .collection(this._collection)
       .deleteOne({ _id: new ObjectId(id) });
 
@@ -59,13 +59,11 @@ class Dao<T> implements IDao<T> {
     }
   }
 
-  async get() {
-    const users = await Database.getDb()
-      .collection(this._collection)
-      .find()
-      .toArray();
+  async get(): Promise<Document[]> {
+    const db = await Database.getDb();
+    const users = await db.collection(this._collection).find().toArray();
     return users;
   }
 }
 
-export { Dao, IDao };
+export { Dao, DaoImpl };
