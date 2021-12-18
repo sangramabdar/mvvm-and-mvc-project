@@ -14,42 +14,40 @@ class UserService {
       if (Object.keys(user).length == 0) return Result(null, "empty body");
 
       await this.userDao.add(user);
-      return Result("added", null);
+      return Result("success", "added");
     } catch (error: any) {
-      return Result(null, error.message);
+      return Result("failure", error.message);
     }
   }
 
   async getUsers(): Promise<ResultType<Document[]>> {
     try {
       const users = await this.userDao.get();
-      return Result(users, null);
+      return Result("success", users);
     } catch (error: any) {
-      console.log(error.message);
-      return Result(null, error.message);
+      return Result("failure", error.message);
     }
   }
 
   async deleteUser(id: string) {
     try {
       if (!id) {
-        return Result("plz provide id in request body");
+        return Result("failure", "plz provide id in request body");
       }
       await this.userDao.deleteById(id);
-      return Result("deleted", null);
+      return Result("success", "deleted");
     } catch (error: any) {
-      return Result(error.message, null);
+      return Result("failure", error.message);
     }
   }
 
   async updateUser(id: string, user: UserEntity) {
     try {
-      //it throws error if input is not valid
       userValidation(id, user);
       await this.userDao.updateById(id, user);
-      return Result(null, "updated");
+      return Result("success", "updated");
     } catch (error: any) {
-      return Result(error.message, null);
+      return Result("failure", error.message);
     }
   }
 }

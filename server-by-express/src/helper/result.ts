@@ -1,21 +1,13 @@
+type State = "success" | "failure";
+
 export interface ResultType<T> {
-  result: T | null;
-  error: null | string;
+  state: State;
+  payload: T;
 }
 
-export default function Result<T>(
-  value: T | null = null,
-  e: string | null = null
-): ResultType<T> {
-  if (e) {
-    return {
-      result: null,
-      error: e,
-    };
-  }
-
+export default function Result<T>(state: State, payload: T): ResultType<T> {
   return {
-    result: value,
-    error: e,
+    state,
+    payload,
   };
 }
