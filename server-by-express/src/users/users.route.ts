@@ -1,13 +1,13 @@
 import "reflect-metadata";
 import { Router } from "express";
-import { container } from "tsyringe";
-import { UsersController } from "./users.controller";
+
+import { UserController } from "./users.controller";
 
 const UserRouter = Router();
 
-UserRouter.get("/", UsersController.getUsers);
-UserRouter.post("/", UsersController.addUser);
-UserRouter.put("/", UsersController.updateUser);
-UserRouter.delete("/", UsersController.deleteUser);
+UserRouter.get("/", UserController.getUsers);
+UserRouter.post("/", UserController.addUser);
+UserRouter.put("/", UserController.updateUser);
+UserRouter.delete("/", UserController.deleteUser);
 
 export default UserRouter;

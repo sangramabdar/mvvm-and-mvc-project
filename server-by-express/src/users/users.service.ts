@@ -9,6 +9,7 @@ class UserService {
   constructor() {
     this.userDao = new UserDao();
   }
+
   async addUser(user: UserEntity) {
     try {
       if (Object.keys(user).length == 0) return Result("failure", "empty body");
