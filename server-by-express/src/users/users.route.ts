@@ -5,7 +5,7 @@ import { UserController } from "./users.controller";
 
 const UserRouter = Router();
 
-UserRouter.get("/", UserController.getUsers);
+UserRouter.get("/", UserController.getUser);
 UserRouter.post("/", UserController.addUser);
 UserRouter.put("/", UserController.updateUser);
 UserRouter.delete("/", UserController.deleteUser);

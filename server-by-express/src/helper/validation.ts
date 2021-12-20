@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 function userValidation<T>(id: string, value: T) {
   if (!id || !value) {
     throw new Error("plz provide id and value in request body");
@@ -13,4 +15,12 @@ function userValidation<T>(id: string, value: T) {
   throw new Error("value must not be empty or it must be object");
 }
 
-export { userValidation };
+function idValidaion(id: string) {
+  const isValid = ObjectId.isValid(id);
+
+  if (!isValid) {
+    throw new Error("wrong id");
+  }
+}
+
+export { userValidation, idValidaion };

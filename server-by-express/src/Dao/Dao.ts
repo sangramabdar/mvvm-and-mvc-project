@@ -1,12 +1,12 @@
 import { Document, ObjectId } from "mongodb";
 import Database from "../config/db";
-import { UserEntity } from "./UserDao";
 
 interface Dao<T> {
-  get(): any;
+  getAll(): Promise<Document[]>;
   add(element: T);
   updateById(id: string, element: T);
   deleteById(id: string);
+  getById(id: string): Promise<Document>;
 }
 
 class DaoImpl<T> implements Dao<T> {
@@ -15,18 +15,21 @@ class DaoImpl<T> implements Dao<T> {
   constructor(collection: string) {
     this._collection = collection;
   }
+  async getById(id: string): Promise<Document> {
+    const _id = new ObjectId(id);
+    const db = await Database.getDb();
+    const getResult = await db.collection(this._collection).findOne({ _id });
+    if (!getResult) {
+      throw new Error("specified id is not there");
+    }
+    return getResult;
+  }
   async add(element: T) {
     const db = await Database.getDb();
     db.collection(this._collection).insertOne(element);
   }
 
   async updateById(id: string, element: T) {
-    const isValid = ObjectId.isValid(id);
-
-    if (!isValid) {
-      throw new Error("wrong id");
-    }
-
     const _id = new ObjectId(id);
     const db = await Database.getDb();
     const updateResult = await db.collection(this._collection).updateOne(
@@ -44,11 +47,6 @@ class DaoImpl<T> implements Dao<T> {
   }
 
   async deleteById(id: string) {
-    const isValid = ObjectId.isValid(id);
-
-    if (!isValid) {
-      throw new Error("wrong id");
-    }
     const db = await Database.getDb();
     const deleteResult = await db
       .collection(this._collection)
@@ -59,7 +57,7 @@ class DaoImpl<T> implements Dao<T> {
     }
   }
 
-  async get(): Promise<Document[]> {
+  async getAll(): Promise<Document[]> {
     const db = await Database.getDb();
     const users = await db.collection(this._collection).find().toArray();
     return users;
