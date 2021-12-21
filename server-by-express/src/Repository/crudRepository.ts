@@ -1,7 +1,7 @@
 import { Document, ObjectId } from "mongodb";
 import Database from "../config/db";
 
-interface Dao<T> {
+interface CrudRepository<T> {
   getAll(): Promise<Document[]>;
   add(element: T);
   updateById(id: string, element: T);
@@ -9,7 +9,7 @@ interface Dao<T> {
   getById(id: string): Promise<Document>;
 }
 
-class DaoImpl<T> implements Dao<T> {
+class CrudRepositoryImpl<T> implements CrudRepository<T> {
   protected _collection: string;
 
   constructor(collection: string) {
@@ -42,7 +42,7 @@ class DaoImpl<T> implements Dao<T> {
     );
 
     if (updateResult.matchedCount == 0) {
-      throw new Error("specified id is not there");
+      throw new Error(`specified id is not there in ${this._collection}`);
     }
   }
 
@@ -53,15 +53,22 @@ class DaoImpl<T> implements Dao<T> {
       .deleteOne({ _id: new ObjectId(id) });
 
     if (deleteResult.deletedCount == 0) {
-      throw new Error("object already deleted");
+      throw new Error(
+        `specified id is not there in ${this._collection} collection or object is already deleted`
+      );
     }
   }
 
   async getAll(): Promise<Document[]> {
     const db = await Database.getDb();
     const users = await db.collection(this._collection).find().toArray();
+    if (users.length === 0) {
+      throw new Error(
+        `no ${this._collection} documents in ${this._collection} collection`
+      );
+    }
     return users;
   }
 }
 
-export { Dao, DaoImpl };
+export { CrudRepository, CrudRepositoryImpl };

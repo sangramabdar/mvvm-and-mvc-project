@@ -5,9 +5,11 @@ import { UserController } from "./users.controller";
 
 const UserRouter = Router();
 
-UserRouter.get("/", UserController.getUser);
-UserRouter.post("/", UserController.addUser);
-UserRouter.put("/", UserController.updateUser);
-UserRouter.delete("/", UserController.deleteUser);
+UserRouter.get("/getuser", UserController.getUser);
+UserRouter.get("/getusers", UserController.getUsers);
+UserRouter.post("/adduser", UserController.addUser);
+UserRouter.put("/updateuser", UserController.updateUser);
+UserRouter.delete("/deleteuser", UserController.deleteUser);
+UserRouter.use("*", UserController.wrongRoute);
 
 export default UserRouter;

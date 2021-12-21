@@ -1,19 +1,19 @@
 import { Document } from "mongodb";
-import { UserDao, UserEntity } from "../Dao/UserDao";
+import { UserEntity, UserRepository } from "../Repository/userRepository";
+
 import Result, { ResultType } from "../helper/result";
 import { idValidaion, userValidation } from "../helper/validation";
 
 class UserService {
-  #userDao: UserDao;
+  #userDao: UserRepository;
 
   constructor() {
-    this.#userDao = new UserDao();
+    this.#userDao = new UserRepository();
   }
 
   async addUser(user: UserEntity) {
     try {
       if (Object.keys(user).length == 0) return Result("failure", "empty body");
-
       await this.#userDao.add(user);
       return Result("success", "added");
     } catch (error: any) {
