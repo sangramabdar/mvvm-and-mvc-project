@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UserEntity } from "../Repository/userRepository";
-import UserService from "./users.service";
+import UserService from "./user.service";
 
 class UserController {
   static userService: UserService = new UserService();

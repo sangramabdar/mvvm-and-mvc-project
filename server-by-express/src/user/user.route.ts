@@ -1,7 +1,6 @@
-import "reflect-metadata";
 import { Router } from "express";
 
-import { UserController } from "./users.controller";
+import { UserController } from "./user.controller";
 
 const UserRouter = Router();
 

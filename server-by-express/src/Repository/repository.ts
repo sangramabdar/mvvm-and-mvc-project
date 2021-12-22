@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { Db, ObjectId } from "mongodb";
 import Database from "../config/db";
 
 interface Repository<T> {
@@ -67,7 +67,7 @@ class RepositoryImpl<T> implements Repository<T> {
       .toArray()) as T[];
     if (users.length === 0) {
       throw new Error(
-        `no ${this._collection} documents in ${this._collection} collection`
+        `no ${this._collection} in ${this._collection} collection`
       );
     }
     return users;

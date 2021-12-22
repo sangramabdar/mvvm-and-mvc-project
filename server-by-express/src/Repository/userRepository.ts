@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import Database from "../config/db";
 import { Repository, RepositoryImpl } from "./repository";
 
 interface BaseEntity {
@@ -10,22 +11,16 @@ interface UserEntity extends BaseEntity {
   age: number;
 }
 
-interface BookEntity extends BaseEntity {
-  name: string;
-  isbn: string;
-}
-
 interface UserRepository extends Repository<UserEntity> {}
 
-interface BookRepository extends Repository<BookEntity> {}
-// class UserRepositoryImpl
-//   extends RepositoryImpl<UserEntity>
-//   implements UserRepository
-// {
-//   private static collection = "users";
-//   constructor() {
-//     super(UserRepositoryImpl.collection);
-//   }
-// }
+class UserRepositoryImpl
+  extends RepositoryImpl<UserEntity>
+  implements UserRepository
+{
+  private static collection = "users";
+  constructor() {
+    super(UserRepositoryImpl.collection);
+  }
+}
 
-export { UserRepository, UserEntity, BookRepository, BookEntity };
+export { UserRepository, UserEntity, UserRepositoryImpl, BaseEntity };

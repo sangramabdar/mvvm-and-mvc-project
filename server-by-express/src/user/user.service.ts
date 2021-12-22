@@ -1,15 +1,18 @@
 import { Document } from "mongodb";
-import { UserEntity, UserRepository } from "../Repository/userRepository";
+import {
+  UserEntity,
+  UserRepository,
+  UserRepositoryImpl,
+} from "../Repository/userRepository";
 
 import Result, { ResultType } from "../helper/result";
 import { idValidaion, userValidation } from "../helper/validation";
-import { RepositoryImpl } from "../Repository/repository";
 
 class UserService {
   #userRepository: UserRepository;
 
   constructor() {
-    this.#userRepository = new RepositoryImpl("book");
+    this.#userRepository = new UserRepositoryImpl();
   }
 
   async addUser(user: UserEntity) {
@@ -22,7 +25,7 @@ class UserService {
     }
   }
 
-  async getUsers(): Promise<ResultType<Document[]>> {
+  async getUsers(): Promise<ResultType<UserEntity[]>> {
     try {
       const users = await this.#userRepository.getAll();
       return Result("success", users);
