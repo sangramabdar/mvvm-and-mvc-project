@@ -1,28 +1,28 @@
-import { Document, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import Database from "../config/db";
 
-interface CrudRepository<T> {
-  getAll(): Promise<any[]>;
+interface Repository<T> {
+  getAll(): Promise<T[]>;
   add(element: T);
   updateById(id: string, element: T);
   deleteById(id: string);
-  getById(id: string): Promise<any>;
+  getById(id: string): Promise<T>;
 }
 
-class CrudRepositoryImplForMongodb<T> implements CrudRepository<T> {
+class RepositoryImpl<T> implements Repository<T> {
   protected _collection: string;
 
   constructor(collection: string) {
     this._collection = collection;
   }
-  async getById(id: string): Promise<Document> {
+  async getById(id: string): Promise<T> {
     const _id = new ObjectId(id);
     const db = await Database.getDb();
     const getResult = await db.collection(this._collection).findOne({ _id });
     if (!getResult) {
       throw new Error("specified id is not there");
     }
-    return getResult;
+    return getResult as T;
   }
   async add(element: T) {
     const db = await Database.getDb();
@@ -59,9 +59,12 @@ class CrudRepositoryImplForMongodb<T> implements CrudRepository<T> {
     }
   }
 
-  async getAll(): Promise<Document[]> {
+  async getAll(): Promise<T[]> {
     const db = await Database.getDb();
-    const users = await db.collection(this._collection).find().toArray();
+    const users = (await db
+      .collection(this._collection)
+      .find()
+      .toArray()) as T[];
     if (users.length === 0) {
       throw new Error(
         `no ${this._collection} documents in ${this._collection} collection`
@@ -71,4 +74,4 @@ class CrudRepositoryImplForMongodb<T> implements CrudRepository<T> {
   }
 }
 
-export { CrudRepository, CrudRepositoryImplForMongodb };
+export { Repository, RepositoryImpl };

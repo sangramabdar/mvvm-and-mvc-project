@@ -1,17 +1,31 @@
 import { ObjectId } from "mongodb";
-import { CrudRepositoryImplForMongodb } from "./crudRepository";
+import { Repository, RepositoryImpl } from "./repository";
 
-interface UserEntity {
+interface BaseEntity {
   _id?: ObjectId;
+}
+
+interface UserEntity extends BaseEntity {
   name: string;
   age: number;
 }
 
-class UserRepository extends CrudRepositoryImplForMongodb<UserEntity> {
-  private static collection = "users";
-  constructor() {
-    super(UserRepository.collection);
-  }
+interface BookEntity extends BaseEntity {
+  name: string;
+  isbn: string;
 }
 
-export { UserRepository, UserEntity };
+interface UserRepository extends Repository<UserEntity> {}
+
+interface BookRepository extends Repository<BookEntity> {}
+// class UserRepositoryImpl
+//   extends RepositoryImpl<UserEntity>
+//   implements UserRepository
+// {
+//   private static collection = "users";
+//   constructor() {
+//     super(UserRepositoryImpl.collection);
+//   }
+// }
+
+export { UserRepository, UserEntity, BookRepository, BookEntity };
