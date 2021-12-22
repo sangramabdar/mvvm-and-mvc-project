@@ -2,14 +2,14 @@ import { Document, ObjectId } from "mongodb";
 import Database from "../config/db";
 
 interface CrudRepository<T> {
-  getAll(): Promise<Document[]>;
+  getAll(): Promise<any[]>;
   add(element: T);
   updateById(id: string, element: T);
   deleteById(id: string);
-  getById(id: string): Promise<Document>;
+  getById(id: string): Promise<any>;
 }
 
-class CrudRepositoryImpl<T> implements CrudRepository<T> {
+class CrudRepositoryImplForMongodb<T> implements CrudRepository<T> {
   protected _collection: string;
 
   constructor(collection: string) {
@@ -71,4 +71,4 @@ class CrudRepositoryImpl<T> implements CrudRepository<T> {
   }
 }
 
-export { CrudRepository, CrudRepositoryImpl };
+export { CrudRepository, CrudRepositoryImplForMongodb };

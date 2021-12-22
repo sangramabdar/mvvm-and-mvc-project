@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import AppController from "../app.controller";
 import AppRouter from "../app.route";
 import UserRouter from "../users/users.route";
 import { app } from "./initserver";
@@ -6,9 +7,7 @@ import { app } from "./initserver";
 async function initRoutes() {
   app.use("/", AppRouter);
   app.use("/user", UserRouter);
-  app.use("*", async (req: Request, res: Response) => {
-    return res.json({ result: "wrong route" });
-  });
+  app.use("*", AppController.wrongRoute);
 }
 
 export default initRoutes;

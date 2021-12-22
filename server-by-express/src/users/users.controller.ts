@@ -24,7 +24,6 @@ class UserController {
 
   static async deleteUser(req: Request, res: Response) {
     const id = req.body.id;
-
     const result = await UserController.userService.deleteUser(id);
     return res.json(result);
   }

@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { CrudRepositoryImpl } from "./crudRepository";
+import { CrudRepositoryImplForMongodb } from "./crudRepository";
 
 interface UserEntity {
   _id?: ObjectId;
@@ -7,7 +7,7 @@ interface UserEntity {
   age: number;
 }
 
-class UserRepository extends CrudRepositoryImpl<UserEntity> {
+class UserRepository extends CrudRepositoryImplForMongodb<UserEntity> {
   private static collection = "users";
   constructor() {
     super(UserRepository.collection);

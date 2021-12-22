@@ -1,11 +1,8 @@
 import { Router } from "express";
-import AppController from "./app.controller";
+import RootController from "./app.controller";
 
-const AppRouter = Router();
+const RootRouter = Router();
 
-AppRouter.get("/", AppController.get);
-AppRouter.post("/");
-AppRouter.put("/");
-AppRouter.delete("/");
+RootRouter.get("/", RootController.get);
 
-export default AppRouter;
+export default RootRouter;
