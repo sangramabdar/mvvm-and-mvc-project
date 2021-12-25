@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { Document } from "mongodb";
 
 import ResponseBuilder from "../helper/result";
-import { errorHandler } from "../helper/validation";
+import { statusCodeHandler } from "../helper/validation";
 
 import { UserEntity } from "../Repository/userRepository";
 import UserService from "../service/user.service";
@@ -18,7 +18,7 @@ class UserController {
       return httpResponse.json(response);
     } catch (error) {
       let response = new ResponseBuilder<string>(error.message);
-      errorHandler(error, response, httpResponse);
+      statusCodeHandler(error, response, httpResponse);
       return httpResponse.json(response);
     }
   }
@@ -31,7 +31,7 @@ class UserController {
       return httpResponse.status(201).json(response);
     } catch (error) {
       let response = new ResponseBuilder<string>(error.message);
-      errorHandler(error, response, httpResponse);
+      statusCodeHandler(error, response, httpResponse);
       return httpResponse.json(response);
     }
   }
@@ -44,7 +44,7 @@ class UserController {
       return httpResponse.json(response);
     } catch (error) {
       let response = new ResponseBuilder<string>(error.message);
-      errorHandler(error, response, httpResponse);
+      statusCodeHandler(error, response, httpResponse);
       return httpResponse.json(response);
     }
   }
@@ -57,7 +57,7 @@ class UserController {
       return httpResponse.json(response);
     } catch (error) {
       let response = new ResponseBuilder<string>(error.message);
-      errorHandler(error, response, httpResponse);
+      statusCodeHandler(error, response, httpResponse);
       return httpResponse.json(response);
     }
   }
@@ -70,7 +70,7 @@ class UserController {
       return httpResponse.json(response);
     } catch (error) {
       let response = new ResponseBuilder<string>(error.message);
-      errorHandler(error, response, httpResponse);
+      statusCodeHandler(error, response, httpResponse);
       return httpResponse.json(response);
     }
   }

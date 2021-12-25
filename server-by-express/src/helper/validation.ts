@@ -23,25 +23,25 @@ function idValidaion(id: string) {
   const isValid = ObjectId.isValid(id);
 
   if (!isValid) {
-    throw new Error("id format is not correct");
+    throw new WrongContent("id format is not correct");
   }
 }
 
-function errorHandler(
+function statusCodeHandler(
   error: Error,
   res: ResponseBuilder<string>,
   httpResponse: Response
 ) {
   if (error instanceof DataBaseConnectionError) {
     res.setStatus(500);
-    httpResponse.status(500);
+    httpResponse.statusCode = 500;
   } else if (error instanceof EntityNotFound) {
     res.setStatus(404);
-    httpResponse.status(404);
+    httpResponse.statusCode = 404;
   } else if (error instanceof WrongContent) {
-    res.setStatus(422);
-    httpResponse.status(422);
+    res.setStatus(400);
+    httpResponse.statusCode = 400;
   }
 }
 
-export { userValidation, idValidaion, errorHandler };
+export { userValidation, idValidaion, statusCodeHandler };
