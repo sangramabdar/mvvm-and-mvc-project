@@ -19,7 +19,7 @@ function idValidaion(id: string) {
   const isValid = ObjectId.isValid(id);
 
   if (!isValid) {
-    throw new Error("wrong id");
+    throw new Error("id format is not correct");
   }
 }
 

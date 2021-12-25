@@ -5,9 +5,9 @@ import {
   UserRepositoryImpl,
 } from "../Repository/userRepository";
 
-import Result, { ResultType } from "../helper/result";
-import { idValidaion, userValidation } from "../helper/validation";
 import Database from "../config/db";
+import { DataBaseConnectionError, EntityNotFound } from "../helper/exceptions";
+import { idValidaion } from "../helper/validation";
 
 class UserService {
   #userRepository: UserRepository;
@@ -18,9 +18,8 @@ class UserService {
 
   async addUser(user: UserEntity) {
     let db = await Database.getDb();
-
     if (!db) {
-      throw new Error("db connection is not there");
+      throw new DataBaseConnectionError();
     }
     await this.#userRepository.add(user, db);
     return "added";
@@ -28,11 +27,9 @@ class UserService {
 
   async getUsers(): Promise<UserEntity[]> {
     let db = await Database.getDb();
-    // if (Object.keys(user).length == 0) return Result("failure", "empty body");
     if (!db) {
-      throw new Error("db connection is not there");
+      throw new DataBaseConnectionError();
     }
-
     const users = await this.#userRepository.getAll(db);
     return users;
   }
@@ -40,44 +37,37 @@ class UserService {
   async deleteUser(id: string) {
     let db = await Database.getDb();
     if (!db) {
-      throw new Error("db connection is not there");
+      throw new DataBaseConnectionError();
     }
-
-    if (!id) {
-      return "plz provide id in request body";
-    }
-
+    idValidaion(id);
     let result = await this.#userRepository.deleteById(id, db);
-    if (result) {
-      return "deleted";
+    if (!result) {
+      throw new EntityNotFound("user");
     }
-    return "not found";
+    return "deleted";
   }
 
   async updateUser(id: string, user: UserEntity) {
     let db = await Database.getDb();
     if (!db) {
-      throw new Error("db connection is not there");
+      throw new DataBaseConnectionError();
     }
     let result = await this.#userRepository.updateById(id, user, db);
-    if (result) {
-      return "updated";
+    if (!result) {
+      throw new EntityNotFound("user");
     }
-    return "not found";
+    return "updated";
   }
 
-  async getUser(id: string): Promise<string | Document> {
+  async getUser(id: string): Promise<Document> {
     let db = await Database.getDb();
     if (!db) {
-      throw new Error("db connection is not there");
+      throw new DataBaseConnectionError();
     }
-    if (!id) {
-      return Result("failure", "plz provide id in request body");
-    }
-
+    idValidaion(id);
     const result = await this.#userRepository.getById(id, db);
     if (!result) {
-      return "not found";
+      throw new EntityNotFound("user");
     }
     return result;
   }

@@ -1,4 +1,8 @@
 import { Request, Response } from "express";
+import { STATUS_CODES } from "http";
+import { Document } from "mongodb";
+import { DataBaseConnectionError } from "../helper/exceptions";
+import ResponseBuilder from "../helper/result";
 import { UserEntity } from "../Repository/userRepository";
 import UserService from "../service/user.service";
 
@@ -8,9 +12,11 @@ class UserController {
   static async getUsers(req: Request, res: Response) {
     try {
       const result = await UserController.userService.getUsers();
-      return res.json(result);
+      let response = new ResponseBuilder<UserEntity[]>().setPayload(result);
+      return res.json(response);
     } catch (error) {
-      return res.json(error.message);
+      let response = new ResponseBuilder<string>().setError(error.message);
+      return res.json(response);
     }
   }
 
@@ -18,9 +24,17 @@ class UserController {
     try {
       const user: UserEntity = req.body;
       const result = await UserController.userService.addUser(user);
-      return res.json(result);
+      let response = new ResponseBuilder<string>()
+        .setPayload(result)
+        .setStatus(201);
+
+      return res.status(201).json(response);
     } catch (error) {
-      return res.status(500).json(error.message);
+      let response = new ResponseBuilder<string>().setError(error.message);
+      if (error instanceof DataBaseConnectionError) {
+        return res.status(500).json(response.setStatus(500));
+      }
+      return res.json(response);
     }
   }
 
@@ -28,9 +42,14 @@ class UserController {
     try {
       const { id, value } = req.body;
       const result = await UserController.userService.updateUser(id, value);
-      return res.json(result);
+      const response = new ResponseBuilder<string>().setPayload(result);
+      return res.json(response);
     } catch (error) {
-      return res.status(500).json(error.message);
+      let response = new ResponseBuilder<string>().setError(error.message);
+      if (error instanceof DataBaseConnectionError) {
+        return res.status(500).json(response.setStatus(500));
+      }
+      return res.json(response);
     }
   }
 
@@ -38,9 +57,14 @@ class UserController {
     try {
       const id = req.body.id;
       const result = await UserController.userService.deleteUser(id);
-      return res.json(result);
+      const response = new ResponseBuilder<string>().setPayload(result);
+      return res.json(response);
     } catch (error) {
-      return res.status(500).json(error.message);
+      let response = new ResponseBuilder<string>().setError(error.message);
+      if (error instanceof DataBaseConnectionError) {
+        return res.status(500).json(response.setStatus(500));
+      }
+      return res.json(response);
     }
   }
 
@@ -48,9 +72,15 @@ class UserController {
     try {
       const id = req.body.id;
       const result = await UserController.userService.getUser(id);
-      return res.json(result);
+      const response = new ResponseBuilder<Document>().setPayload(result);
+      return res.json(response);
     } catch (error) {
-      return res.status(500).json(error.message);
+      let response = new ResponseBuilder<string>().setError(error.message);
+
+      if (error instanceof DataBaseConnectionError) {
+        return res.status(500).json(response.setStatus(500));
+      }
+      return res.json(response);
     }
   }
 

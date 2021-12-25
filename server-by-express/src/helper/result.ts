@@ -1,16 +1,30 @@
-type ResultState = "success" | "failure";
+class ResponseBuilder<T> {
+  private timeStamp: number;
+  private error: string = "";
+  private status: number = 200;
+  private payload: T;
+  constructor() {
+    this.timeStamp = Date.now();
+  }
 
-export interface ResultType<T> {
-  state: ResultState;
-  payload: T;
+  setError(error: string) {
+    this.error = error;
+    return this;
+  }
+
+  setStatus(status: number) {
+    this.status = status;
+    return this;
+  }
+
+  setPayload(payload: T) {
+    this.payload = payload;
+    return this;
+  }
+
+  build() {
+    return this;
+  }
 }
 
-export default function Result<T>(
-  state: ResultState,
-  payload: T
-): ResultType<T> {
-  return {
-    state,
-    payload,
-  };
-}
+export default ResponseBuilder;

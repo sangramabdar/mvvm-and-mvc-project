@@ -1,4 +1,5 @@
 import Database from "../config/db";
+import { DataBaseConnectionError } from "../helper/exceptions";
 import {
   BookEntity,
   BookRepository,
@@ -15,7 +16,7 @@ class BookService {
   async getBooks(): Promise<BookEntity[]> {
     let db = await Database.getDb();
     if (!db) {
-      throw new Error("db connection is not there");
+      throw new DataBaseConnectionError();
     }
     let books = await this.#bookRepository.getAll(db);
     return books;
