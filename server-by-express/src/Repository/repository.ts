@@ -2,11 +2,11 @@ import { Db, ObjectId } from "mongodb";
 import Database from "../config/db";
 
 interface Repository<T> {
-  getAll(): Promise<T[]>;
-  add(element: T);
-  updateById(id: string, element: T);
-  deleteById(id: string);
-  getById(id: string): Promise<T>;
+  getAll(db: Db): Promise<T[]>;
+  add(element: T, db: Db);
+  updateById(id: string, element: T, db: Db): Promise<boolean>;
+  deleteById(id: string, db: Db): Promise<boolean>;
+  getById(id: string, db: Db): Promise<T | null>;
 }
 
 class RepositoryImpl<T> implements Repository<T> {
@@ -15,24 +15,24 @@ class RepositoryImpl<T> implements Repository<T> {
   constructor(collection: string) {
     this._collection = collection;
   }
-  async getById(id: string): Promise<T> {
+  async getById(id: string): Promise<T | null> {
     const _id = new ObjectId(id);
     const db = await Database.getDb();
-    const getResult = await db.collection(this._collection).findOne({ _id });
+
+    const getResult = await db!!.collection(this._collection).findOne({ _id });
     if (!getResult) {
-      throw new Error("specified id is not there");
+      return null;
     }
     return getResult as T;
   }
-  async add(element: T) {
-    const db = await Database.getDb();
+  async add(element: T, db: Db) {
     db.collection(this._collection).insertOne(element);
   }
 
-  async updateById(id: string, element: T) {
+  async updateById(id: string, element: T, db: Db): Promise<boolean> {
     const _id = new ObjectId(id);
-    const db = await Database.getDb();
-    const updateResult = await db.collection(this._collection).updateOne(
+
+    const updateResult = await db!!.collection(this._collection).updateOne(
       {
         _id,
       },
@@ -42,35 +42,29 @@ class RepositoryImpl<T> implements Repository<T> {
     );
 
     if (updateResult.matchedCount == 0) {
-      throw new Error(`specified id is not there in ${this._collection}`);
+      return false;
     }
+    return true;
   }
 
-  async deleteById(id: string) {
-    const db = await Database.getDb();
-    const deleteResult = await db
+  async deleteById(id: string, db: Db): Promise<boolean> {
+    const deleteResult = await db!!
       .collection(this._collection)
       .deleteOne({ _id: new ObjectId(id) });
 
     if (deleteResult.deletedCount == 0) {
-      throw new Error(
-        `specified id is not there in ${this._collection} collection or object is already deleted`
-      );
+      return false;
     }
+
+    return true;
   }
 
-  async getAll(): Promise<T[]> {
-    const db = await Database.getDb();
-    const users = (await db
-      .collection(this._collection)
-      .find()
-      .toArray()) as T[];
+  async getAll(db: Db): Promise<T[]> {
+    const users = await db!!.collection(this._collection).find().toArray();
     if (users.length === 0) {
-      throw new Error(
-        `no ${this._collection} in ${this._collection} collection`
-      );
+      return [];
     }
-    return users;
+    return users as T[];
   }
 }
 

@@ -1,14 +1,14 @@
-import AppController from "../app.controller";
-import AppRouter from "../app.route";
-import BookRouter from "../book/book.routes";
-import UserRouter from "../user/user.route";
+import RootController from "../controller/root.controller";
+import BookRouter from "../route/book";
+import RootRouter from "../route/root";
+import UserRouter from "../route/user";
 import { app } from "./initserver";
 
 async function initRoutes() {
-  app.use("/", AppRouter);
+  app.use("/", RootRouter);
   app.use("/user", UserRouter);
   app.use("/book", BookRouter);
-  app.use("*", AppController.wrongRoute);
+  app.use("*", RootController.wrongRoute);
 }
 
 export default initRoutes;

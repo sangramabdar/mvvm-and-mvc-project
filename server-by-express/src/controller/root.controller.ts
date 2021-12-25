@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import AppService from "./app.service";
+import RootService from "../service/root.service";
 
 class RootController {
-  private static appService: AppService = new AppService();
+  private static appService: RootService = new RootService();
 
   static async get(req: Request, res: Response) {
     const result = await RootController.appService.getApp();
