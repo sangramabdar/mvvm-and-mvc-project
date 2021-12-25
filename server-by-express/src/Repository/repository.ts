@@ -15,11 +15,10 @@ class RepositoryImpl<T> implements Repository<T> {
   constructor(collection: string) {
     this._collection = collection;
   }
-  async getById(id: string): Promise<T | null> {
+  async getById(id: string, db: Db): Promise<T | null> {
     const _id = new ObjectId(id);
-    const db = await Database.getDb();
 
-    const getResult = await db!!.collection(this._collection).findOne({ _id });
+    const getResult = await db.collection(this._collection).findOne({ _id });
     if (!getResult) {
       return null;
     }
@@ -32,7 +31,7 @@ class RepositoryImpl<T> implements Repository<T> {
   async updateById(id: string, element: T, db: Db): Promise<boolean> {
     const _id = new ObjectId(id);
 
-    const updateResult = await db!!.collection(this._collection).updateOne(
+    const updateResult = await db.collection(this._collection).updateOne(
       {
         _id,
       },
@@ -48,7 +47,7 @@ class RepositoryImpl<T> implements Repository<T> {
   }
 
   async deleteById(id: string, db: Db): Promise<boolean> {
-    const deleteResult = await db!!
+    const deleteResult = await db
       .collection(this._collection)
       .deleteOne({ _id: new ObjectId(id) });
 
@@ -60,7 +59,7 @@ class RepositoryImpl<T> implements Repository<T> {
   }
 
   async getAll(db: Db): Promise<T[]> {
-    const users = await db!!.collection(this._collection).find().toArray();
+    const users = await db.collection(this._collection).find().toArray();
     if (users.length === 0) {
       return [];
     }

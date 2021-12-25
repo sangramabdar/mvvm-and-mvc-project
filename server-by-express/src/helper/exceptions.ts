@@ -12,4 +12,10 @@ class EntityNotFound extends Error {
   }
 }
 
-export { DataBaseConnectionError, EntityNotFound };
+class WrongContent extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+export { DataBaseConnectionError, EntityNotFound, WrongContent };

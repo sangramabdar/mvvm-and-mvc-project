@@ -2,9 +2,13 @@ class ResponseBuilder<T> {
   private timeStamp: number;
   private error: string = "";
   private status: number = 200;
-  private payload: T;
-  constructor() {
+  private payload: T | {};
+
+  constructor(error: string = "", payload: T | {} = {}, status: number = 200) {
     this.timeStamp = Date.now();
+    this.error = error;
+    this.status = status;
+    this.payload = payload;
   }
 
   setError(error: string) {

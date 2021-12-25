@@ -7,7 +7,7 @@ import {
 
 import Database from "../config/db";
 import { DataBaseConnectionError, EntityNotFound } from "../helper/exceptions";
-import { idValidaion } from "../helper/validation";
+import { idValidaion, userValidation } from "../helper/validation";
 
 class UserService {
   #userRepository: UserRepository;
@@ -52,6 +52,8 @@ class UserService {
     if (!db) {
       throw new DataBaseConnectionError();
     }
+    idValidaion(id);
+    userValidation(id, user);
     let result = await this.#userRepository.updateById(id, user, db);
     if (!result) {
       throw new EntityNotFound("user");

@@ -1,91 +1,82 @@
 import { Request, Response } from "express";
-import { STATUS_CODES } from "http";
+
 import { Document } from "mongodb";
-import { DataBaseConnectionError } from "../helper/exceptions";
+
 import ResponseBuilder from "../helper/result";
+import { errorHandler } from "../helper/validation";
+
 import { UserEntity } from "../Repository/userRepository";
 import UserService from "../service/user.service";
 
 class UserController {
   static userService: UserService = new UserService();
 
-  static async getUsers(req: Request, res: Response) {
+  static async getUsers(httpRequest: Request, httpResponse: Response) {
     try {
       const result = await UserController.userService.getUsers();
-      let response = new ResponseBuilder<UserEntity[]>().setPayload(result);
-      return res.json(response);
+      let response = new ResponseBuilder<UserEntity[]>("", result);
+      return httpResponse.json(response);
     } catch (error) {
-      let response = new ResponseBuilder<string>().setError(error.message);
-      return res.json(response);
+      let response = new ResponseBuilder<string>(error.message);
+      errorHandler(error, response, httpResponse);
+      return httpResponse.json(response);
     }
   }
 
-  static async addUser(req: Request, res: Response) {
+  static async addUser(httpRequest: Request, httpResponse: Response) {
     try {
-      const user: UserEntity = req.body;
+      const user: UserEntity = httpRequest.body;
       const result = await UserController.userService.addUser(user);
-      let response = new ResponseBuilder<string>()
-        .setPayload(result)
-        .setStatus(201);
-
-      return res.status(201).json(response);
+      let response = new ResponseBuilder<string>("", result);
+      return httpResponse.status(201).json(response);
     } catch (error) {
-      let response = new ResponseBuilder<string>().setError(error.message);
-      if (error instanceof DataBaseConnectionError) {
-        return res.status(500).json(response.setStatus(500));
-      }
-      return res.json(response);
+      let response = new ResponseBuilder<string>(error.message);
+      errorHandler(error, response, httpResponse);
+      return httpResponse.json(response);
     }
   }
 
-  static async updateUser(req: Request, res: Response) {
+  static async updateUser(httpRequest: Request, httpResponse: Response) {
     try {
-      const { id, value } = req.body;
+      const { id, value } = httpRequest.body;
       const result = await UserController.userService.updateUser(id, value);
-      const response = new ResponseBuilder<string>().setPayload(result);
-      return res.json(response);
+      const response = new ResponseBuilder<string>("", result);
+      return httpResponse.json(response);
     } catch (error) {
-      let response = new ResponseBuilder<string>().setError(error.message);
-      if (error instanceof DataBaseConnectionError) {
-        return res.status(500).json(response.setStatus(500));
-      }
-      return res.json(response);
+      let response = new ResponseBuilder<string>(error.message);
+      errorHandler(error, response, httpResponse);
+      return httpResponse.json(response);
     }
   }
 
-  static async deleteUser(req: Request, res: Response) {
+  static async deleteUser(httpRequest: Request, httpResponse: Response) {
     try {
-      const id = req.body.id;
+      const id = httpRequest.body.id;
       const result = await UserController.userService.deleteUser(id);
-      const response = new ResponseBuilder<string>().setPayload(result);
-      return res.json(response);
+      const response = new ResponseBuilder<string>("", result);
+      return httpResponse.json(response);
     } catch (error) {
-      let response = new ResponseBuilder<string>().setError(error.message);
-      if (error instanceof DataBaseConnectionError) {
-        return res.status(500).json(response.setStatus(500));
-      }
-      return res.json(response);
+      let response = new ResponseBuilder<string>(error.message);
+      errorHandler(error, response, httpResponse);
+      return httpResponse.json(response);
     }
   }
 
-  static async getUser(req: Request, res: Response) {
+  static async getUser(httpRequest: Request, httpResponse: Response) {
     try {
-      const id = req.body.id;
+      const id = httpRequest.body.id;
       const result = await UserController.userService.getUser(id);
       const response = new ResponseBuilder<Document>().setPayload(result);
-      return res.json(response);
+      return httpResponse.json(response);
     } catch (error) {
-      let response = new ResponseBuilder<string>().setError(error.message);
-
-      if (error instanceof DataBaseConnectionError) {
-        return res.status(500).json(response.setStatus(500));
-      }
-      return res.json(response);
+      let response = new ResponseBuilder<string>(error.message);
+      errorHandler(error, response, httpResponse);
+      return httpResponse.json(response);
     }
   }
 
-  static async wrongRoute(req: Request, res: Response) {
-    return res.json({ result: "wrong route" });
+  static async wrongRoute(httpRequest: Request, httpResponse: Response) {
+    return httpResponse.json({ result: "wrong route" });
   }
 }
 
