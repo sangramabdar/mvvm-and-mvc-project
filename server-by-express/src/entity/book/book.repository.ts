@@ -1,4 +1,7 @@
-import { Repository, RepositoryImpl } from "../../genericComponents/Repository/repository";
+import {
+  Repository,
+  RepositoryImpl,
+} from "../../genericComponents/Repository/repository";
 import { BaseEntity } from "../user/user.repository";
 
 interface BookEntity extends BaseEntity {
@@ -22,4 +25,10 @@ class BookRepositoryImpl
   }
 }
 
-export { BookRepository, BookEntity, BookRepositoryImpl };
+function createBook(): BookEntity {
+  return {
+    isbn: "",
+    name: "",
+  };
+}
+export { BookRepository, BookEntity, BookRepositoryImpl, createBook };
