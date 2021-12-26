@@ -1,26 +1,25 @@
-import Database from "../config/db";
-import { DataBaseConnectionError } from "../helper/exceptions";
 import {
   BookEntity,
   BookRepository,
   BookRepositoryImpl,
 } from "../Repository/bookRepository";
+import { EntityService, EntityServiceImpl } from "./entityServive";
 
-class BookService {
-  #bookRepository: BookRepository;
+interface BookService extends EntityService<BookEntity> {
+  method();
+}
 
+class BookServiceImpl
+  extends EntityServiceImpl<BookEntity, BookRepository<BookEntity>>
+  implements BookService
+{
   constructor() {
-    this.#bookRepository = new BookRepositoryImpl();
+    super();
+    this.entityRepository = new BookRepositoryImpl();
   }
-
-  async getBooks(): Promise<BookEntity[]> {
-    let db = await Database.getDb();
-    if (!db) {
-      throw new DataBaseConnectionError();
-    }
-    let books = await this.#bookRepository.getAll(db);
-    return books;
+  method() {
+    console.log("book");
   }
 }
 
-export default BookService;
+export { BookService, BookServiceImpl };

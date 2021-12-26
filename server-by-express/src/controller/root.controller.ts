@@ -10,7 +10,7 @@ class RootController {
   }
 
   static async wrongRoute(req: Request, res: Response) {
-    return res.redirect("/");
+    return res.sendStatus(404);
   }
 }
 

@@ -6,14 +6,14 @@ import ResponseBuilder from "../helper/result";
 import { statusCodeHandler } from "../helper/validation";
 
 import { UserEntity } from "../Repository/userRepository";
-import UserService from "../service/user.service";
+import { UserService, UserServiceImpl } from "../service/user.service";
 
 class UserController {
-  static userService: UserService = new UserService();
+  static userService: UserService = new UserServiceImpl();
 
   static async getUsers(httpRequest: Request, httpResponse: Response) {
     try {
-      const result = await UserController.userService.getUsers();
+      const result = await UserController.userService.getAllEntities();
       let response = new ResponseBuilder<UserEntity[]>("", result);
       return httpResponse.json(response);
     } catch (error) {
@@ -26,7 +26,7 @@ class UserController {
   static async addUser(httpRequest: Request, httpResponse: Response) {
     try {
       const user: UserEntity = httpRequest.body;
-      const result = await UserController.userService.addUser(user);
+      const result = await UserController.userService.addEntity(user);
       let response = new ResponseBuilder<string>("", result);
       return httpResponse.status(201).json(response);
     } catch (error) {
@@ -38,8 +38,9 @@ class UserController {
 
   static async updateUser(httpRequest: Request, httpResponse: Response) {
     try {
-      const { id, value } = httpRequest.body;
-      const result = await UserController.userService.updateUser(id, value);
+      const id = httpRequest.params["id"];
+      const user: UserEntity = httpRequest.body;
+      const result = await UserController.userService.updateEntity(id, user);
       const response = new ResponseBuilder<string>("", result);
       return httpResponse.json(response);
     } catch (error) {
@@ -51,8 +52,8 @@ class UserController {
 
   static async deleteUser(httpRequest: Request, httpResponse: Response) {
     try {
-      const id = httpRequest.body.id;
-      const result = await UserController.userService.deleteUser(id);
+      const id = httpRequest.params["id"];
+      const result = await UserController.userService.deleteEntity(id);
       const response = new ResponseBuilder<string>("", result);
       return httpResponse.json(response);
     } catch (error) {
@@ -64,8 +65,9 @@ class UserController {
 
   static async getUser(httpRequest: Request, httpResponse: Response) {
     try {
-      const id = httpRequest.body.id;
-      const result = await UserController.userService.getUser(id);
+      const id = httpRequest.params["id"];
+      console.log(id);
+      const result = await UserController.userService.getEntity(id);
       const response = new ResponseBuilder<Document>().setPayload(result);
       return httpResponse.json(response);
     } catch (error) {
@@ -76,7 +78,7 @@ class UserController {
   }
 
   static async wrongRoute(httpRequest: Request, httpResponse: Response) {
-    return httpResponse.json({ result: "wrong route" });
+    return httpResponse.status(404).json({ result: "wrong route" });
   }
 }
 

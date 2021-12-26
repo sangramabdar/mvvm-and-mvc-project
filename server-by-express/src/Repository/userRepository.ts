@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import Database from "../config/db";
+
 import { Repository, RepositoryImpl } from "./repository";
 
 interface BaseEntity {
@@ -11,16 +11,20 @@ interface UserEntity extends BaseEntity {
   age: number;
 }
 
-interface UserRepository extends Repository<UserEntity> {}
+interface UserRepository<T> extends Repository<UserEntity> {}
 
 class UserRepositoryImpl
   extends RepositoryImpl<UserEntity>
-  implements UserRepository
+  implements UserRepository<UserEntity>
 {
   private static collection = "users";
   constructor() {
     super(UserRepositoryImpl.collection);
   }
+
+  method() {
+    console.log("method");
+  }
 }
 
-export { UserRepository, UserEntity, UserRepositoryImpl, BaseEntity };
+export { UserRepository, UserRepositoryImpl, BaseEntity, UserEntity };

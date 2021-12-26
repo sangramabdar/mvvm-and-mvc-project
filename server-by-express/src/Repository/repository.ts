@@ -1,5 +1,4 @@
 import { Db, ObjectId } from "mongodb";
-import Database from "../config/db";
 
 interface Repository<T> {
   getAll(db: Db): Promise<T[]>;
