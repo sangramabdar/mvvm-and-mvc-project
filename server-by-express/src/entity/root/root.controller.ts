@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import RootService from "../service/root.service";
+import RootService from "./root.service";
 
 class RootController {
   private static appService: RootService = new RootService();

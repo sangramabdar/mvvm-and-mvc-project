@@ -1,6 +1,9 @@
-import Database from "../config/db";
-import { DataBaseConnectionError, EntityNotFound } from "../helper/exceptions";
-import { idValidaion } from "../helper/validation";
+import Database from "../../config/db";
+import {
+  DataBaseConnectionError,
+  EntityNotFound,
+} from "../../helper/exceptions";
+import { idValidaion } from "../../helper/validation";
 import { Repository } from "../Repository/repository";
 
 interface EntityService<T> {
@@ -15,7 +18,7 @@ class EntityServiceImpl<E, T extends Repository<E>>
   implements EntityService<E>
 {
   protected entityRepository: T;
-
+  protected entityName: string = "";
   async getEntity(id: string): Promise<E> {
     let db = await Database.getDb();
     if (!db) {
@@ -24,7 +27,7 @@ class EntityServiceImpl<E, T extends Repository<E>>
     idValidaion(id);
     const result = await this.entityRepository.getById(id, db);
     if (!result) {
-      throw new EntityNotFound("user");
+      throw new EntityNotFound("entity");
     }
     return result as E;
   }
@@ -55,7 +58,7 @@ class EntityServiceImpl<E, T extends Repository<E>>
     idValidaion(id);
     let result = await this.entityRepository.updateById(id, entity, db);
     if (!result) {
-      throw new EntityNotFound("user");
+      throw new EntityNotFound(this.entityName);
     }
     return "updated";
   }
@@ -68,7 +71,7 @@ class EntityServiceImpl<E, T extends Repository<E>>
     idValidaion(id);
     let result = await this.entityRepository.deleteById(id, db);
     if (!result) {
-      throw new EntityNotFound("user");
+      throw new EntityNotFound(this.entityName);
     }
     return "deleted";
   }

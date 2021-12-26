@@ -2,6 +2,7 @@ import Express from "express";
 import cors from "cors";
 
 import initRoutes from "./initRoutes";
+
 const app = Express();
 
 async function initServer() {

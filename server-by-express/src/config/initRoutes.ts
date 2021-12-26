@@ -1,7 +1,7 @@
-import RootController from "../controller/root.controller";
-import BookRouter from "../route/book";
-import RootRouter from "../route/root";
-import UserRouter from "../route/user";
+import BookRouter from "../entity/book/book.routes";
+import RootRouter from "../entity/root/root.routes";
+import RootController from "../entity/root/root.controller";
+import UserRouter from "../entity/user/user.routes";
 import { app } from "./initserver";
 
 async function initRoutes() {

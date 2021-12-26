@@ -1,9 +1,12 @@
 import {
+  EntityService,
+  EntityServiceImpl,
+} from "../../genericComponents/service/entityServive";
+import {
   BookEntity,
   BookRepository,
   BookRepositoryImpl,
-} from "../Repository/bookRepository";
-import { EntityService, EntityServiceImpl } from "./entityServive";
+} from "./book.repository";
 
 interface BookService extends EntityService<BookEntity> {
   method();
@@ -16,6 +19,7 @@ class BookServiceImpl
   constructor() {
     super();
     this.entityRepository = new BookRepositoryImpl();
+    this.entityName = "book";
   }
   method() {
     console.log("book");

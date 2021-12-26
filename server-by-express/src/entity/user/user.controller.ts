@@ -1,12 +1,10 @@
 import { Request, Response } from "express";
 
 import { Document } from "mongodb";
-
-import ResponseBuilder from "../helper/result";
-import { statusCodeHandler } from "../helper/validation";
-
-import { UserEntity } from "../Repository/userRepository";
-import { UserService, UserServiceImpl } from "../service/user.service";
+import ResponseBuilder from "../../helper/result";
+import { statusCodeHandler } from "../../helper/validation";
+import { UserEntity } from "./user.repository";
+import { UserService, UserServiceImpl } from "./user.service";
 
 class UserController {
   static userService: UserService = new UserServiceImpl();

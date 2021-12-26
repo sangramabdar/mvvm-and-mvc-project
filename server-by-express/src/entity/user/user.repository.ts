@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 
-import { Repository, RepositoryImpl } from "./repository";
+import { Repository, RepositoryImpl } from "../../genericComponents/Repository/repository";
 
 interface BaseEntity {
   _id?: ObjectId;

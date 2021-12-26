@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
-
-import ResponseBuilder from "../helper/result";
-import { statusCodeHandler } from "../helper/validation";
-import { BookEntity } from "../Repository/bookRepository";
-
-import { BookService, BookServiceImpl } from "../service/book.service";
+import ResponseBuilder from "../../helper/result";
+import { statusCodeHandler } from "../../helper/validation";
+import { BookService, BookServiceImpl } from "./book.service";
+import { BookEntity } from "./book.repository";
 
 class BookController {
   private static bookService: BookService = new BookServiceImpl();

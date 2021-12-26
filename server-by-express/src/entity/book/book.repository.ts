@@ -1,5 +1,5 @@
-import { Repository, RepositoryImpl } from "./repository";
-import { BaseEntity } from "./userRepository";
+import { Repository, RepositoryImpl } from "../../genericComponents/Repository/repository";
+import { BaseEntity } from "../user/user.repository";
 
 interface BookEntity extends BaseEntity {
   name: string;

@@ -1,9 +1,12 @@
 import {
+  EntityService,
+  EntityServiceImpl,
+} from "../../genericComponents/service/entityServive";
+import {
   UserEntity,
   UserRepository,
   UserRepositoryImpl,
-} from "../Repository/userRepository";
-import { EntityService, EntityServiceImpl } from "./entityServive";
+} from "./user.repository";
 
 interface UserService extends EntityService<UserEntity> {
   method();
@@ -16,6 +19,7 @@ class UserServiceImpl
   constructor() {
     super();
     this.entityRepository = new UserRepositoryImpl();
+    this.entityName = "user";
   }
 
   method() {
