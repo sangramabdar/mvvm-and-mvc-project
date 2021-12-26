@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import ResponseBuilder from "../../helper/result";
-import { entityValidation, statusCodeHandler } from "../../helper/validation";
+import { schemaValidation, statusCodeHandler } from "../../helper/validation";
 import { BookService, BookServiceImpl } from "./book.service";
 import { BookEntity } from "./book.repository";
 
@@ -22,7 +22,7 @@ class BookController {
   static async addBook(httpRequest: Request, httpResponse: Response) {
     try {
       const book: BookEntity = httpRequest.body;
-      entityValidation(book, "book");
+      schemaValidation(book, "book");
       const result = await BookController.bookService.addEntity(book);
       let response = new ResponseBuilder<string>("", result);
       return httpResponse.status(201).json(response);

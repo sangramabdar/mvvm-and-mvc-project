@@ -1,11 +1,7 @@
 import { Response } from "express";
 import { ObjectId } from "mongodb";
 import { createBook } from "../entity/book/book.repository";
-import {
-  BaseEntity,
-  createUser,
-  UserEntity,
-} from "../entity/user/user.repository";
+import { BaseEntity, createUser } from "../entity/user/user.repository";
 import {
   DataBaseConnectionError,
   EntityNotFound,
@@ -27,7 +23,7 @@ function userValidation<T>(id: string, value: T) {
 
 type entityTypes = "user" | "book";
 
-function entityValidation<T extends BaseEntity>(
+function schemaValidation<T extends BaseEntity>(
   entity: T,
   whichEntity: entityTypes
 ) {
@@ -47,15 +43,21 @@ function entityValidation<T extends BaseEntity>(
 
 function keysValidation(keys: string[], entity: any) {
   let dataKeys = Object.keys(entity);
+
   if (dataKeys.length !== keys.length) {
     throw new Error(
-      "schema of entity is not correct or extra information provided "
+      "complete information is not provided or some extra information is provided"
     );
   }
 
+  dataKeys.forEach(key => {
+    entity[key.toLowerCase()] = entity[key];
+    delete entity[key];
+  });
+
   for (let key of keys) {
     if (!entity[key]) {
-      throw new Error("some information is not available");
+      throw new Error("some information is not provided");
     }
   }
 }
@@ -85,4 +87,4 @@ function statusCodeHandler(
   }
 }
 
-export { userValidation, idValidaion, statusCodeHandler, entityValidation };
+export { idValidaion, statusCodeHandler, schemaValidation };
