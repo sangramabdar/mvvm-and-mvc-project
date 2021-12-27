@@ -1,8 +1,13 @@
 import { Request, Response } from "express";
 import ResponseBuilder from "../../helper/result";
-import { schemaValidation, statusCodeHandler } from "../../helper/validation";
+import {
+  Book,
+  schemaValidation,
+  statusCodeHandler,
+} from "../../helper/validation";
 import { BookService, BookServiceImpl } from "./book.service";
 import { BookEntity } from "./book.repository";
+import Joi from "joi";
 
 class BookController {
   private static bookService: BookService = new BookServiceImpl();
@@ -22,7 +27,8 @@ class BookController {
   static async addBook(httpRequest: Request, httpResponse: Response) {
     try {
       const book: BookEntity = httpRequest.body;
-      schemaValidation(book, "book");
+      const validatedBook = await schemaValidation(book, "book");
+      await Book.validateAsync(validatedBook);
       const result = await BookController.bookService.addEntity(book);
       let response = new ResponseBuilder<string>("", result);
       return httpResponse.status(201).json(response);

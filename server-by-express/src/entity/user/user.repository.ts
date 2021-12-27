@@ -12,12 +12,14 @@ interface BaseEntity {
 interface UserEntity extends BaseEntity {
   name: string;
   age: number;
+  address: string;
 }
 
 function createUser(): UserEntity {
   return {
     age: 22,
     name: "",
+    address: "",
   };
 }
 

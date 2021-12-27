@@ -24,7 +24,6 @@ class EntityServiceImpl<E, T extends Repository<E>>
     if (!db) {
       throw new DataBaseConnectionError();
     }
-    idValidaion(id);
     const result = await this.entityRepository.getById(id, db);
     if (!result) {
       throw new EntityNotFound("entity");
@@ -55,7 +54,6 @@ class EntityServiceImpl<E, T extends Repository<E>>
     if (!db) {
       throw new DataBaseConnectionError();
     }
-    idValidaion(id);
     let result = await this.entityRepository.updateById(id, entity, db);
     if (!result) {
       throw new EntityNotFound(this.entityName);
@@ -68,7 +66,6 @@ class EntityServiceImpl<E, T extends Repository<E>>
     if (!db) {
       throw new DataBaseConnectionError();
     }
-    idValidaion(id);
     let result = await this.entityRepository.deleteById(id, db);
     if (!result) {
       throw new EntityNotFound(this.entityName);

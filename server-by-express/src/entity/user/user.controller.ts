@@ -2,7 +2,12 @@ import { Request, Response } from "express";
 
 import { Document } from "mongodb";
 import ResponseBuilder from "../../helper/result";
-import { schemaValidation, statusCodeHandler } from "../../helper/validation";
+import {
+  genderValidation,
+  schemaValidation,
+  statusCodeHandler,
+  User,
+} from "../../helper/validation";
 import { UserEntity } from "./user.repository";
 import { UserService, UserServiceImpl } from "./user.service";
 
@@ -21,12 +26,21 @@ class UserController {
     }
   }
 
-  static async addUser(httpRequest: Request, httpResponse: Response) {
+  static async addUser(
+    error,
+    httpRequest: Request,
+    httpResponse: Response,
+    next
+  ) {
+    console.log("addUSer");
     try {
+      if (error) {
+        throw error;
+      }
       const user: UserEntity = httpRequest.body;
-      schemaValidation<UserEntity>(user, "user");
       const result = await UserController.userService.addEntity(user);
       let response = new ResponseBuilder<string>("", result);
+
       return httpResponse.status(201).json(response);
     } catch (error) {
       let response = new ResponseBuilder<string>(error.message);

@@ -1,7 +1,13 @@
 import { Response } from "express";
+import Joi from "joi";
 import { ObjectId } from "mongodb";
+import { join } from "path";
 import { createBook } from "../entity/book/book.repository";
-import { BaseEntity, createUser } from "../entity/user/user.repository";
+import {
+  BaseEntity,
+  createUser,
+  UserEntity,
+} from "../entity/user/user.repository";
 import {
   DataBaseConnectionError,
   EntityNotFound,
@@ -23,7 +29,7 @@ function userValidation<T>(id: string, value: T) {
 
 type entityTypes = "user" | "book";
 
-function schemaValidation<T extends BaseEntity>(
+async function schemaValidation<T extends BaseEntity>(
   entity: T,
   whichEntity: entityTypes
 ) {
@@ -31,35 +37,34 @@ function schemaValidation<T extends BaseEntity>(
     case "user":
       let user = createUser();
       var keys = Object.keys(user);
-      keysValidation(keys, entity);
+      return await keysValidation(keys, entity);
       break;
     case "book":
       let book = createBook();
       var keys = Object.keys(book);
-      keysValidation(keys, entity);
-      break;
+      return await keysValidation(keys, entity);
   }
 }
 
-function keysValidation(keys: string[], entity: any) {
+async function keysValidation(keys: string[], entity: any) {
   let dataKeys = Object.keys(entity);
 
   if (dataKeys.length !== keys.length) {
-    throw new Error(
+    throw new WrongContent(
       "complete information is not provided or some extra information is provided"
     );
   }
-
+  let newData = {};
   dataKeys.forEach(key => {
-    entity[key.toLowerCase()] = entity[key];
-    delete entity[key];
+    newData[key.toLowerCase()] = entity[key];
   });
 
   for (let key of keys) {
-    if (!entity[key]) {
-      throw new Error("some information is not provided");
+    if (!newData[key]) {
+      throw new WrongContent("some information is not provided");
     }
   }
+  return newData;
 }
 
 function idValidaion(id: string) {
@@ -81,10 +86,37 @@ function statusCodeHandler(
   } else if (error instanceof EntityNotFound) {
     res.setStatus(404);
     httpResponse.statusCode = 404;
+  } else if (error instanceof WrongContent) {
+    res.setStatus(422);
+    httpResponse.statusCode = 422;
   } else {
     res.setStatus(400);
     httpResponse.statusCode = 400;
   }
 }
 
-export { idValidaion, statusCodeHandler, schemaValidation };
+const User = Joi.object<UserEntity, false, UserEntity>({
+  name: Joi.string().required(),
+  age: Joi.number().integer().required(),
+  address: Joi.string().required(),
+});
+
+const Book = Joi.object({
+  name: Joi.string().required(),
+  isbn: Joi.number().integer().required(),
+});
+
+function genderValidation(gender: string) {
+  if (gender === "male" || gender === "female") {
+    return;
+  }
+  throw new WrongContent("gender is not correct ");
+}
+export {
+  idValidaion,
+  statusCodeHandler,
+  schemaValidation,
+  User,
+  Book,
+  genderValidation,
+};
