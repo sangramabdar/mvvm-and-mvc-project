@@ -3,12 +3,14 @@ import RootRouter from "../entity/root/root.routes";
 import RootController from "../entity/root/root.controller";
 import UserRouter from "../entity/user/user.routes";
 import { app } from "./initserver";
+import { errorMiddleWare } from "../helper/errorMiddleWare";
 
 async function initRoutes() {
   app.use("/", RootRouter);
   app.use("/user", UserRouter);
   app.use("/book", BookRouter);
   app.use("*", RootController.wrongRoute);
+  app.use(errorMiddleWare);
 }
 
 export default initRoutes;

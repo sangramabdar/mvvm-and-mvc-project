@@ -7,19 +7,18 @@ const UserRouter = Router();
 
 UserRouter.get("/", UserController.getUsers);
 UserRouter.get("/:id", UserController.getUser);
-UserRouter.post("/", dataValidator, UserController.addUser);
+UserRouter.post("/", userValidator, UserController.addUser);
 UserRouter.put("/:id", UserController.updateUser);
 UserRouter.delete("/:id", UserController.deleteUser);
 UserRouter.use("*", UserController.wrongRoute);
 
-async function dataValidator(httpRequest, res, next) {
+async function userValidator(httpRequest, httpResponse, next) {
   try {
     const user: UserEntity = httpRequest.body;
     const validatedUser = await schemaValidation<UserEntity>(user, "user");
     await User.validateAsync(validatedUser);
     next();
   } catch (error) {
-    console.log("error");
     next(error);
   }
 }

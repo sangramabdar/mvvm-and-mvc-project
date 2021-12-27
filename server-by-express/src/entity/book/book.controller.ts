@@ -24,11 +24,17 @@ class BookController {
     }
   }
 
-  static async addBook(httpRequest: Request, httpResponse: Response) {
+  static async addBook(
+    error,
+    httpRequest: Request,
+    httpResponse: Response,
+    next
+  ) {
     try {
-      const book: BookEntity = httpRequest.body;
-      const validatedBook = await schemaValidation(book, "book");
-      await Book.validateAsync(validatedBook);
+      if (error) {
+        throw error;
+      }
+      const book = httpRequest.body;
       const result = await BookController.bookService.addEntity(book);
       let response = new ResponseBuilder<string>("", result);
       return httpResponse.status(201).json(response);
