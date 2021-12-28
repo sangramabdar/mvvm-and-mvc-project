@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { schemaValidation, User } from "../../helper/validation";
+import { idValidation, schemaValidation, User } from "../../helper/validation";
 import { UserController } from "./user.controller";
 import { UserEntity } from "./user.repository";
 
 const UserRouter = Router();
 
 UserRouter.get("/", UserController.getUsers);
-UserRouter.get("/:id", UserController.getUser);
+UserRouter.get("/:id", idValidation, UserController.getUser);
 UserRouter.post("/", userValidator, UserController.addUser);
-UserRouter.put("/:id", UserController.updateUser);
-UserRouter.delete("/:id", UserController.deleteUser);
+UserRouter.put("/:id", idValidation, UserController.updateUser);
+UserRouter.delete("/:id", idValidation, UserController.deleteUser);
 UserRouter.use("*", UserController.wrongRoute);
 
 async function userValidator(httpRequest, httpResponse, next) {

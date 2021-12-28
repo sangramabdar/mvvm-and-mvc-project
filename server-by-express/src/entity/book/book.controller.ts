@@ -12,40 +12,28 @@ import Joi from "joi";
 class BookController {
   private static bookService: BookService = new BookServiceImpl();
 
-  static async getBooks(httpRequest: Request, httpResponse: Response) {
+  static async getBooks(httpRequest: Request, httpResponse: Response, next) {
     try {
       const result = await BookController.bookService.getAllEntities();
       let response = new ResponseBuilder<BookEntity[]>("", result);
       return httpResponse.json(response);
     } catch (error) {
-      let response = new ResponseBuilder<string>(error.message);
-      statusCodeHandler(error, response, httpResponse);
-      return httpResponse.json(response);
+      next(error);
     }
   }
 
-  static async addBook(
-    error,
-    httpRequest: Request,
-    httpResponse: Response,
-    next
-  ) {
+  static async addBook(httpRequest: Request, httpResponse: Response, next) {
     try {
-      if (error) {
-        throw error;
-      }
       const book = httpRequest.body;
       const result = await BookController.bookService.addEntity(book);
       let response = new ResponseBuilder<string>("", result);
       return httpResponse.status(201).json(response);
     } catch (error) {
-      let response = new ResponseBuilder<string>(error.message);
-      statusCodeHandler(error, response, httpResponse);
-      return httpResponse.json(response);
+      next(error);
     }
   }
 
-  static async updateBook(httpRequest: Request, httpResponse: Response) {
+  static async updateBook(httpRequest: Request, httpResponse: Response, next) {
     try {
       const id = httpRequest.params["id"];
       const book: BookEntity = httpRequest.body;
@@ -53,35 +41,29 @@ class BookController {
       const response = new ResponseBuilder<string>("", result);
       return httpResponse.json(response);
     } catch (error) {
-      let response = new ResponseBuilder<string>(error.message);
-      statusCodeHandler(error, response, httpResponse);
-      return httpResponse.json(response);
+      next(error);
     }
   }
 
-  static async deleteBook(httpRequest: Request, httpResponse: Response) {
+  static async deleteBook(httpRequest: Request, httpResponse: Response, next) {
     try {
       const id = httpRequest.params["id"];
       const result = await BookController.bookService.deleteEntity(id);
       const response = new ResponseBuilder<string>("", result);
       return httpResponse.json(response);
     } catch (error) {
-      let response = new ResponseBuilder<string>(error.message);
-      statusCodeHandler(error, response, httpResponse);
-      return httpResponse.json(response);
+      next(error);
     }
   }
 
-  static async getBook(httpRequest: Request, httpResponse: Response) {
+  static async getBook(httpRequest: Request, httpResponse: Response, next) {
     try {
       const id = httpRequest.params["id"];
       const result = await BookController.bookService.getEntity(id);
       const response = new ResponseBuilder<Document>().setPayload(result);
       return httpResponse.json(response);
     } catch (error) {
-      let response = new ResponseBuilder<string>(error.message);
-      statusCodeHandler(error, response, httpResponse);
-      return httpResponse.json(response);
+      next(error);
     }
   }
 

@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import Joi from "joi";
 import { ObjectId } from "mongodb";
 import { join } from "path";
@@ -67,14 +67,6 @@ async function keysValidation(keys: string[], entity: any) {
   return newData;
 }
 
-function idValidaion(id: string) {
-  const isValid = ObjectId.isValid(id);
-
-  if (!isValid) {
-    throw new WrongContent("id format is not correct");
-  }
-}
-
 function statusCodeHandler(
   error: Error,
   res: ResponseBuilder<string>,
@@ -112,11 +104,30 @@ function genderValidation(gender: string) {
   }
   throw new WrongContent("gender is not correct ");
 }
+
+async function idValidation(
+  httpRequest: Request,
+  httpResponse: Response,
+  next
+) {
+  try {
+    const id = httpRequest.params["id"];
+    const isValid = ObjectId.isValid(id);
+
+    if (!isValid) {
+      throw new WrongContent("id format is not correct");
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
 export {
-  idValidaion,
   statusCodeHandler,
   schemaValidation,
   User,
   Book,
   genderValidation,
+  idValidation,
 };
