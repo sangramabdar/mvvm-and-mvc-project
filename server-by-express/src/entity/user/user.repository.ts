@@ -1,27 +1,8 @@
-import { ObjectId } from "mongodb";
-
 import {
   Repository,
   RepositoryImpl,
 } from "../../genericComponents/Repository/repository";
-
-interface BaseEntity {
-  _id?: ObjectId;
-}
-
-interface UserEntity extends BaseEntity {
-  name: string;
-  age: number;
-  address: string;
-}
-
-function createUser(): UserEntity {
-  return {
-    age: 22,
-    name: "",
-    address: "",
-  };
-}
+import { UserEntity } from "./user.entity";
 
 interface UserRepository<T> extends Repository<UserEntity> {}
 
@@ -39,10 +20,4 @@ class UserRepositoryImpl
   }
 }
 
-export {
-  UserRepository,
-  UserRepositoryImpl,
-  BaseEntity,
-  UserEntity,
-  createUser,
-};
+export { UserRepository, UserRepositoryImpl };

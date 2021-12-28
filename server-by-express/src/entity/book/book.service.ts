@@ -8,9 +8,7 @@ import {
   BookRepositoryImpl,
 } from "./book.repository";
 
-interface BookService extends EntityService<BookEntity> {
-  method();
-}
+interface BookService extends EntityService<BookEntity> {}
 
 class BookServiceImpl
   extends EntityServiceImpl<BookEntity, BookRepository<BookEntity>>
@@ -20,9 +18,6 @@ class BookServiceImpl
     super();
     this.entityRepository = new BookRepositoryImpl();
     this.entityName = "book";
-  }
-  method() {
-    console.log("book");
   }
 }
 

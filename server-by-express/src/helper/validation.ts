@@ -1,31 +1,16 @@
 import { Request, Response } from "express";
 import Joi from "joi";
 import { ObjectId } from "mongodb";
-import { join } from "path";
-import { createBook } from "../entity/book/book.repository";
-import {
-  BaseEntity,
-  createUser,
-  UserEntity,
-} from "../entity/user/user.repository";
+import BaseEntity from "../entity/baseEntity";
+import { createBook } from "../entity/book/book.entity";
+import { createUser } from "../entity/user/user.entity";
+
 import {
   DataBaseConnectionError,
   EntityNotFound,
   WrongContent,
 } from "./exceptions";
-import ResponseBuilder from "./result";
-
-function userValidation<T>(id: string, value: T) {
-  if (!id || !value) {
-    throw new WrongContent("plz provide id and value in request body");
-  }
-
-  if (value instanceof Object) {
-    if (Object.keys(value).length == 0) {
-      throw new WrongContent("value must not be empty or it must be object");
-    }
-  }
-}
+import ResponseBuilder from "./responseBuilder";
 
 type entityTypes = "user" | "book";
 
@@ -38,7 +23,6 @@ async function schemaValidation<T extends BaseEntity>(
       let user = createUser();
       var keys = Object.keys(user);
       return await keysValidation(keys, entity);
-      break;
     case "book":
       let book = createBook();
       var keys = Object.keys(book);
@@ -87,24 +71,6 @@ function statusCodeHandler(
   }
 }
 
-const User = Joi.object<UserEntity, false, UserEntity>({
-  name: Joi.string().required(),
-  age: Joi.number().integer().required(),
-  address: Joi.string().required(),
-});
-
-const Book = Joi.object({
-  name: Joi.string().required(),
-  isbn: Joi.number().integer().required(),
-});
-
-function genderValidation(gender: string) {
-  if (gender === "male" || gender === "female") {
-    return;
-  }
-  throw new WrongContent("gender is not correct ");
-}
-
 async function idValidation(
   httpRequest: Request,
   httpResponse: Response,
@@ -113,7 +79,6 @@ async function idValidation(
   try {
     const id = httpRequest.params["id"];
     const isValid = ObjectId.isValid(id);
-
     if (!isValid) {
       throw new WrongContent("id format is not correct");
     }
@@ -123,11 +88,14 @@ async function idValidation(
   }
 }
 
-export {
-  statusCodeHandler,
-  schemaValidation,
-  User,
-  Book,
-  genderValidation,
-  idValidation,
-};
+async function bodyValidation(httpRequest: Request, $: Response, next) {
+  try {
+    if (Object.keys(httpRequest.body).length == 0)
+      throw new Error("body is empty");
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export { statusCodeHandler, schemaValidation, idValidation, bodyValidation };

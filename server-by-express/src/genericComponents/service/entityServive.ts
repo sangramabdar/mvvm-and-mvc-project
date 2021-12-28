@@ -3,7 +3,7 @@ import {
   DataBaseConnectionError,
   EntityNotFound,
 } from "../../helper/exceptions";
-import { idValidaion } from "../../helper/validation";
+
 import { Repository } from "../Repository/repository";
 
 interface EntityService<T> {

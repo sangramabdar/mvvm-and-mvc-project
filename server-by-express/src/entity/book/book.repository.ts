@@ -2,15 +2,10 @@ import {
   Repository,
   RepositoryImpl,
 } from "../../genericComponents/Repository/repository";
-import { BaseEntity } from "../user/user.repository";
+import BaseEntity from "../baseEntity";
+import { BookEntity } from "./book.entity";
 
-interface BookEntity extends BaseEntity {
-  name: string;
-  isbn: string;
-}
-interface BookRepository<T> extends Repository<T> {
-  method();
-}
+interface BookRepository<T> extends Repository<T> {}
 
 class BookRepositoryImpl
   extends RepositoryImpl<BookEntity>
@@ -20,15 +15,6 @@ class BookRepositoryImpl
   constructor() {
     super(BookRepositoryImpl.collection);
   }
-  method() {
-    console.log("book");
-  }
 }
 
-function createBook(): BookEntity {
-  return {
-    isbn: "",
-    name: "",
-  };
-}
-export { BookRepository, BookEntity, BookRepositoryImpl, createBook };
+export { BookRepository, BookEntity, BookRepositoryImpl };

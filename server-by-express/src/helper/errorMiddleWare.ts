@@ -1,4 +1,4 @@
-import ResponseBuilder from "./result";
+import ResponseBuilder from "./responseBuilder";
 import { statusCodeHandler } from "./validation";
 
 async function errorMiddleWare(error, httpRequest, httpResponse, next) {

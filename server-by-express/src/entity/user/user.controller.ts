@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { Document } from "mongodb";
-import ResponseBuilder from "../../helper/result";
+import ResponseBuilder from "../../helper/responseBuilder";
 import { UserEntity } from "./user.repository";
 import { UserService, UserServiceImpl } from "./user.service";
 
