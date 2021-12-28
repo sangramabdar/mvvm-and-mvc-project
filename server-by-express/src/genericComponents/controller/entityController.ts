@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
 import ResponseBuilder from "../../helper/responseBuilder";
 import { statusCodeHandler } from "../../helper/validation";
-import { UserEntity } from "../../entity/user/user.repository";
-
-import { UserService, UserServiceImpl } from "../../entity/user/user.service";
 import { EntityService } from "../service/entityServive";
 
 interface EntityController<T> {

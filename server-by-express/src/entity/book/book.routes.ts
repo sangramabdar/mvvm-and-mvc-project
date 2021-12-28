@@ -16,13 +16,11 @@ BookRouter.get("/:id", idValidation, BookController.getBook);
 BookRouter.post("/", bookValidation, BookController.addBook);
 BookRouter.put("/:id", idValidation, bodyValidation, BookController.updateBook);
 BookRouter.delete("/:id", idValidation, BookController.deleteBook);
-BookRouter.use("*", BookController.wrongRoute);
 
 async function bookValidation(httpRequest, httpResponse, next) {
   try {
     const book: BookEntity = httpRequest.body;
-    const validatedBook = await schemaValidation(book, "book");
-    await BookJoi.validateAsync(validatedBook);
+    await BookJoi.validateAsync(book);
     next();
   } catch (error) {
     next(error);

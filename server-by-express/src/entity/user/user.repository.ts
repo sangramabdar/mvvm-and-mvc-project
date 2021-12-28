@@ -4,7 +4,7 @@ import {
 } from "../../genericComponents/Repository/repository";
 import { UserEntity } from "./user.entity";
 
-interface UserRepository<T> extends Repository<UserEntity> {}
+interface UserRepository<T> extends Repository<T> {}
 
 class UserRepositoryImpl
   extends RepositoryImpl<UserEntity>
@@ -13,10 +13,6 @@ class UserRepositoryImpl
   private static collection = "users";
   constructor() {
     super(UserRepositoryImpl.collection);
-  }
-
-  method() {
-    console.log("method");
   }
 }
 

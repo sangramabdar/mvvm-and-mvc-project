@@ -14,13 +14,11 @@ UserRouter.get("/:id", idValidation, UserController.getUser);
 UserRouter.post("/", userValidation, UserController.addUser);
 UserRouter.put("/:id", idValidation, bodyValidation, UserController.updateUser);
 UserRouter.delete("/:id", idValidation, UserController.deleteUser);
-UserRouter.use("*", UserController.wrongRoute);
 
 async function userValidation(httpRequest, httpResponse, next) {
   try {
     const user: UserEntity = httpRequest.body;
-    const validatedUser = await schemaValidation<UserEntity>(user, "user");
-    await UserJoi.validateAsync(validatedUser);
+    await UserJoi.validateAsync(user);
     next();
   } catch (error) {
     next(error);

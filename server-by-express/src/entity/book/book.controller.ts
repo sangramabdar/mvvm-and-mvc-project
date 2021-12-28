@@ -62,6 +62,7 @@ class BookController {
   }
 
   static async wrongRoute(httpRequest: Request, httpResponse: Response) {
+    console.log("wrong");
     return httpResponse.status(404).json({ result: "wrong route" });
   }
 }

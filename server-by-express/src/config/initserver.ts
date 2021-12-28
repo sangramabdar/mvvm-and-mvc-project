@@ -12,7 +12,6 @@ async function initServer() {
     await initRoutes();
     console.log("server is initialized");
   } catch (error) {
-    console.log(error.message);
     app.use("*", (req, res) => {
       return res.sendStatus(500);
     });

@@ -26,7 +26,7 @@ class EntityServiceImpl<E, T extends Repository<E>>
     }
     const result = await this.entityRepository.getById(id, db);
     if (!result) {
-      throw new EntityNotFound("entity");
+      throw new EntityNotFound(this.entityName);
     }
     return result as E;
   }
