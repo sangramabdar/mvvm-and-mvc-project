@@ -2,8 +2,7 @@ import { Router } from "express";
 import {
   validateId,
   validateBody,
-  validateKeysForPut,
-  validateKeysForPost,
+  validateKeys,
 } from "../../helper/validation";
 
 import BookController from "./book.controller";
@@ -31,8 +30,8 @@ BookRouter.delete("/:id", validateId, BookController.deleteBook);
 
 async function validateSchemaForPut(request, response, next) {
   try {
-    const body = await validateKeysForPut(BookEntityKeys, request.body);
-    request.body = { ...body };
+    const body = await validateKeys(BookEntityKeys, request.body, "PUT");
+    request.body = body;
     next();
   } catch (error) {
     next(error);
@@ -41,8 +40,8 @@ async function validateSchemaForPut(request, response, next) {
 
 async function validateSchemaForPost(request, response, next) {
   try {
-    const body = await validateKeysForPost(BookEntityKeys, request.body);
-    request.body = { ...body };
+    const body = await validateKeys(BookEntityKeys, request.body, "POST");
+    request.body = body;
     next();
   } catch (error) {
     next(error);

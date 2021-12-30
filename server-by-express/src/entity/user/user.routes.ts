@@ -3,8 +3,7 @@ import { Router } from "express";
 import {
   validateBody,
   validateId,
-  validateKeysForPost,
-  validateKeysForPut,
+  validateKeys,
 } from "../../helper/validation";
 import { UserController } from "./user.controller";
 import { UserEntityKeys } from "./user.entity";
@@ -30,8 +29,8 @@ UserRouter.delete("/:id", validateId, UserController.deleteUser);
 
 async function validateSchemaForPut(request, response, next) {
   try {
-    const body = await validateKeysForPut(UserEntityKeys, request.body);
-    request.body = { ...body };
+    const body = await validateKeys(UserEntityKeys, request.body, "PUT");
+    request.body = body;
     next();
   } catch (error) {
     next(error);
@@ -40,8 +39,8 @@ async function validateSchemaForPut(request, response, next) {
 
 async function validateSchemaForPost(request, response, next) {
   try {
-    const body = await validateKeysForPost(UserEntityKeys, request.body);
-    request.body = { ...body };
+    const body = await validateKeys(UserEntityKeys, request.body, "POST");
+    request.body = body;
     next();
   } catch (error) {
     next(error);

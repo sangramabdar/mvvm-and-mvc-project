@@ -81,8 +81,8 @@ function statusCodeHandler(
 
 async function validateId(request: Request, response: Response, next) {
   try {
-    const id = request.params["id"];
-    const isValid = ObjectId.isValid(id);
+    var id = request.params["id"];
+    var isValid = ObjectId.isValid(id);
     if (!isValid) {
       throw new WrongContent("id format is not correct");
     }
@@ -103,43 +103,50 @@ async function validateBody(request: Request, $: Response, next) {
   }
 }
 
-async function validateKeysForPut(entity: { [key: string]: string }, body: {}) {
-  const keys = Object.keys(body);
-
-  const newObject = {};
-
-  for (let key of keys) {
-    // if (!(key in entity)) {
-    //   throw new Error(`${key} is not a part of that schema`);
-    // }
-    if (key in entity) {
-      if (typeof body[key] !== entity[key]) {
-        throw new Error(`${key} must be ${entity[key]}`);
-      }
-      newObject[key] = body[key];
-    }
-  }
-  return newObject;
-}
-
-async function validateKeysForPost(
+async function validateKeysForPut(
   entity: { [key: string]: string },
   body: {}
+) {}
+
+async function validateKeys(
+  entity: { [key: string]: string },
+  body: {},
+  method: "POST" | "PUT"
 ) {
-  const keys = Object.keys(entity);
+  switch (method) {
+    case "POST":
+      var keys = Object.keys(entity);
+      var newObject = {};
+      for (let key of keys) {
+        if (!(key in body)) {
+          throw new Error(`${key} must be there`);
+        }
 
-  const newObject = {};
-  for (let key of keys) {
-    if (!(key in body)) {
-      throw new Error(`${key} must be there`);
-    }
+        if (typeof body[key] !== entity[key]) {
+          throw new Error(`${key} must be ${entity[key]}`);
+        }
+        newObject[key] = body[key];
+      }
+      return newObject;
 
-    if (typeof body[key] !== entity[key]) {
-      throw new Error(`${key} must be ${entity[key]}`);
-    }
-    newObject[key] = body[key];
+    case "PUT":
+      var keys = Object.keys(body);
+
+      var newObject = {};
+
+      for (let key of keys) {
+        // if (!(key in entity)) {
+        //   throw new Error(`${key} is not a part of that schema`);
+        // }
+        if (key in entity) {
+          if (typeof body[key] !== entity[key]) {
+            throw new Error(`${key} must be ${entity[key]}`);
+          }
+          newObject[key] = body[key];
+        }
+      }
+      return newObject;
   }
-  return newObject;
 }
 
 export {
@@ -147,6 +154,5 @@ export {
   validateSchema,
   validateId,
   validateBody,
-  validateKeysForPost,
-  validateKeysForPut,
+  validateKeys,
 };
