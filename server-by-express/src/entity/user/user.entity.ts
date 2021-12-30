@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi, { number, string } from "joi";
 import BaseEntity from "../baseEntity";
 
 interface UserEntity extends BaseEntity {
@@ -7,9 +7,15 @@ interface UserEntity extends BaseEntity {
   address: string;
 }
 
+const UserEntityKeys = {
+  name: "string",
+  age: "number",
+  address: "string",
+};
+
 const UserSchema = Joi.object<UserEntity>({
   name: Joi.string().required(),
-  age: Joi.number().integer().required(),
+  age: Joi.number().required(),
   address: Joi.string().required(),
 });
 
@@ -21,4 +27,4 @@ function createUser(): UserEntity {
   };
 }
 
-export { UserEntity, createUser, UserSchema };
+export { UserEntity, createUser, UserSchema, UserEntityKeys };

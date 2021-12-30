@@ -103,4 +103,50 @@ async function validateBody(request: Request, $: Response, next) {
   }
 }
 
-export { statusCodeHandler, validateSchema, validateId, validateBody };
+async function validateKeysForPut(entity: { [key: string]: string }, body: {}) {
+  const keys = Object.keys(body);
+
+  const newObject = {};
+
+  for (let key of keys) {
+    // if (!(key in entity)) {
+    //   throw new Error(`${key} is not a part of that schema`);
+    // }
+    if (key in entity) {
+      if (typeof body[key] !== entity[key]) {
+        throw new Error(`${key} must be ${entity[key]}`);
+      }
+      newObject[key] = body[key];
+    }
+  }
+  return newObject;
+}
+
+async function validateKeysForPost(
+  entity: { [key: string]: string },
+  body: {}
+) {
+  const keys = Object.keys(entity);
+
+  const newObject = {};
+  for (let key of keys) {
+    if (!(key in body)) {
+      throw new Error(`${key} must be there`);
+    }
+
+    if (typeof body[key] !== entity[key]) {
+      throw new Error(`${key} must be ${entity[key]}`);
+    }
+    newObject[key] = body[key];
+  }
+  return newObject;
+}
+
+export {
+  statusCodeHandler,
+  validateSchema,
+  validateId,
+  validateBody,
+  validateKeysForPost,
+  validateKeysForPut,
+};

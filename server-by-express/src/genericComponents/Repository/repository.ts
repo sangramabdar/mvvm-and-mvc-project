@@ -25,7 +25,11 @@ class RepositoryImpl<T> implements Repository<T> {
   }
 
   async add(element: T, db: Db) {
-    db.collection(this._collection).insertOne(element);
+    const insertOneResult = await db
+      .collection(this._collection)
+      .insertOne(element);
+
+    console.log(insertOneResult);
   }
 
   async updateById(id: string, element: T, db: Db): Promise<boolean> {
