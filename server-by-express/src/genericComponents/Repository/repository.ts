@@ -1,7 +1,7 @@
 import { Db, ObjectId } from "mongodb";
 
 interface Repository<T> {
-  getAll(db: Db): Promise<T[]>;
+  getAll(db: Db): Promise<T[] | null>;
   add(element: T, db: Db);
   updateById(id: string, element: T, db: Db): Promise<boolean>;
   deleteById(id: string, db: Db): Promise<boolean>;
@@ -23,6 +23,7 @@ class RepositoryImpl<T> implements Repository<T> {
     }
     return getResult as T;
   }
+
   async add(element: T, db: Db) {
     db.collection(this._collection).insertOne(element);
   }
@@ -57,10 +58,10 @@ class RepositoryImpl<T> implements Repository<T> {
     return true;
   }
 
-  async getAll(db: Db): Promise<T[]> {
+  async getAll(db: Db): Promise<T[] | null> {
     const users = await db.collection(this._collection).find().toArray();
     if (users.length === 0) {
-      return [];
+      return null;
     }
     return users as T[];
   }

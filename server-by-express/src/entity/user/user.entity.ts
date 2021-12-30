@@ -7,7 +7,7 @@ interface UserEntity extends BaseEntity {
   address: string;
 }
 
-const UserJoi = Joi.object<UserEntity, false, UserEntity>({
+const UserSchema = Joi.object<UserEntity>({
   name: Joi.string().required(),
   age: Joi.number().integer().required(),
   address: Joi.string().required(),
@@ -21,4 +21,4 @@ function createUser(): UserEntity {
   };
 }
 
-export { UserEntity, createUser, UserJoi };
+export { UserEntity, createUser, UserSchema };

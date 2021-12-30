@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Joi from "joi";
+import Joi, { isSchema } from "joi";
 import { ObjectId } from "mongodb";
 import BaseEntity from "../entity/baseEntity";
 import { createBook } from "../entity/book/book.entity";
@@ -33,11 +33,6 @@ async function schemaValidation<T extends BaseEntity>(
 async function keysValidation(keys: string[], entity: any) {
   let dataKeys = Object.keys(entity);
 
-  if (dataKeys.length !== keys.length) {
-    throw new WrongContent(
-      "complete information is not provided or some extra information is provided"
-    );
-  }
   let newData = {};
   dataKeys.forEach(key => {
     newData[key.toLowerCase()] = entity[key];
@@ -51,33 +46,42 @@ async function keysValidation(keys: string[], entity: any) {
   return newData;
 }
 
-function statusCodeHandler(
-  error: Error,
-  res: ResponseBuilder<string>,
-  httpResponse: Response
-) {
-  if (error instanceof DataBaseConnectionError) {
-    res.setStatus(500);
-    httpResponse.statusCode = 500;
-  } else if (error instanceof EntityNotFound) {
-    res.setStatus(404);
-    httpResponse.statusCode = 404;
-  } else if (error instanceof WrongContent) {
-    res.setStatus(422);
-    httpResponse.statusCode = 422;
-  } else {
-    res.setStatus(400);
-    httpResponse.statusCode = 400;
-  }
-}
-
-async function idValidation(
-  httpRequest: Request,
-  httpResponse: Response,
+async function validateSchema<T extends BaseEntity>(
+  request: Request,
+  response,
   next
 ) {
   try {
-    const id = httpRequest.params["id"];
+    console.log(request.path);
+    await schemaValidation<T>(request.body, "user");
+  } catch (error) {
+    next(error);
+  }
+}
+
+function statusCodeHandler(
+  error: Error,
+  res: ResponseBuilder<string>,
+  response: Response
+) {
+  if (error instanceof DataBaseConnectionError) {
+    res.setStatus(500);
+    response.statusCode = 500;
+  } else if (error instanceof EntityNotFound) {
+    res.setStatus(404);
+    response.statusCode = 404;
+  } else if (error instanceof WrongContent) {
+    res.setStatus(422);
+    response.statusCode = 422;
+  } else {
+    res.setStatus(400);
+    response.statusCode = 400;
+  }
+}
+
+async function validateId(request: Request, response: Response, next) {
+  try {
+    const id = request.params["id"];
     const isValid = ObjectId.isValid(id);
     if (!isValid) {
       throw new WrongContent("id format is not correct");
@@ -88,14 +92,15 @@ async function idValidation(
   }
 }
 
-async function bodyValidation(httpRequest: Request, $: Response, next) {
+async function validateBody(request: Request, $: Response, next) {
   try {
-    if (Object.keys(httpRequest.body).length == 0)
-      throw new Error("body is empty");
+    if (Object.keys(request.body).length == 0)
+      throw new Error("body should not be empty");
+
     next();
   } catch (error) {
     next(error);
   }
 }
 
-export { statusCodeHandler, schemaValidation, idValidation, bodyValidation };
+export { statusCodeHandler, validateSchema, validateId, validateBody };

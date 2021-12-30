@@ -5,22 +5,14 @@ import {
 import { UserEntity } from "./user.entity";
 import { UserRepository, UserRepositoryImpl } from "./user.repository";
 
-interface UserService extends EntityService<UserEntity> {
-  method();
-}
+interface UserService extends EntityService<UserEntity> {}
 
 class UserServiceImpl
   extends EntityServiceImpl<UserEntity, UserRepository<UserEntity>>
   implements UserService
 {
   constructor() {
-    super();
-    this.entityRepository = new UserRepositoryImpl();
-    this.entityName = "user";
-  }
-
-  method() {
-    console.log("method");
+    super(new UserRepositoryImpl(), "user");
   }
 }
 

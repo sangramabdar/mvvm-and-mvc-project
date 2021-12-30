@@ -6,7 +6,7 @@ interface BookEntity extends BaseEntity {
   isbn: string;
 }
 
-const BookJoi = Joi.object<BookEntity>({
+const BookSchema = Joi.object<BookEntity>({
   name: Joi.string().required(),
   isbn: Joi.number().integer().required(),
 });
@@ -18,4 +18,4 @@ function createBook(): BookEntity {
   };
 }
 
-export { BookJoi, createBook, BookEntity };
+export { BookSchema, createBook, BookEntity };

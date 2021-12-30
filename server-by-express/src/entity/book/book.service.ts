@@ -15,9 +15,7 @@ class BookServiceImpl
   implements BookService
 {
   constructor() {
-    super();
-    this.entityRepository = new BookRepositoryImpl();
-    this.entityName = "book";
+    super(new BookRepositoryImpl(), "book");
   }
 }
 

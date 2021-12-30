@@ -9,64 +9,64 @@ import { UserService, UserServiceImpl } from "./user.service";
 class UserController {
   static userService: UserService = new UserServiceImpl();
 
-  static async getUsers(httpRequest: Request, httpResponse: Response, next) {
+  static async getUsers(request: Request, response: Response, next) {
     try {
-      const result = await UserController.userService.getAllEntities();
-      let responseBody = new ResponseBuilder<UserEntity[]>("", result);
-      return httpResponse.json(responseBody);
+      const users = await UserController.userService.getAllEntities();
+      let responseBody = new ResponseBuilder<UserEntity[]>("", users);
+      return response.json(responseBody);
     } catch (error) {
       next(error);
     }
   }
 
-  static async addUser(httpRequest: Request, httpResponse: Response, next) {
+  static async addUser(request: Request, response: Response, next) {
     console.log("addUSer");
     try {
-      const user: UserEntity = httpRequest.body;
+      const user: UserEntity = request.body;
       const result = await UserController.userService.addEntity(user);
       let responseBody = new ResponseBuilder<string>("", result);
-      return httpResponse.status(201).json(responseBody);
+      return response.status(201).json(responseBody);
     } catch (error) {
       next(error);
     }
   }
 
-  static async updateUser(httpRequest: Request, httpResponse: Response, next) {
+  static async updateUser(request: Request, response: Response, next) {
     try {
-      const id = httpRequest.params["id"];
-      const user: UserEntity = httpRequest.body;
+      const id = request.params["id"];
+      const user: UserEntity = request.body;
       const result = await UserController.userService.updateEntity(id, user);
       const responseBody = new ResponseBuilder<string>("", result);
-      return httpResponse.json(responseBody);
+      return response.json(responseBody);
     } catch (error) {
       next(error);
     }
   }
 
-  static async deleteUser(httpRequest: Request, httpResponse: Response, next) {
+  static async deleteUser(request: Request, response: Response, next) {
     try {
-      const id = httpRequest.params["id"];
+      const id = request.params["id"];
       const result = await UserController.userService.deleteEntity(id);
       const responseBody = new ResponseBuilder<string>("", result);
-      return httpResponse.json(responseBody);
+      return response.json(responseBody);
     } catch (error) {
       next(error);
     }
   }
 
-  static async getUser(httpRequest: Request, httpResponse: Response, next) {
+  static async getUser(request: Request, response: Response, next) {
     try {
-      const id = httpRequest.params["id"];
+      const id = request.params["id"];
       const result = await UserController.userService.getEntity(id);
       const responseBody = new ResponseBuilder<Document>().setPayload(result);
-      return httpResponse.json(responseBody);
+      return response.json(responseBody);
     } catch (error) {
       next(error);
     }
   }
 
-  static async wrongRoute(httpRequest: Request, httpResponse: Response) {
-    return httpResponse.status(404).json({ result: "wrong route" });
+  static async wrongRoute(request: Request, response: Response) {
+    return response.status(404).json({ result: "wrong route" });
   }
 }
 

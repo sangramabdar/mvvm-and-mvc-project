@@ -7,8 +7,8 @@ import { errorMiddleWare } from "../helper/errorMiddleWare";
 
 async function initRoutes() {
   app.use("/", RootRouter);
-  app.use("/user", UserRouter);
-  app.use("/book", BookRouter);
+  app.use("/users", UserRouter);
+  app.use("/books", BookRouter);
   app.use("*", RootController.wrongRoute);
   app.use(errorMiddleWare);
 }

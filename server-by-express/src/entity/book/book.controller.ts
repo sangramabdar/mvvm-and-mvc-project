@@ -6,64 +6,64 @@ import { BookEntity } from "./book.repository";
 class BookController {
   private static bookService: BookService = new BookServiceImpl();
 
-  static async getBooks(httpRequest: Request, httpResponse: Response, next) {
+  static async getBooks(request: Request, response: Response, next) {
     try {
       const result = await BookController.bookService.getAllEntities();
-      let response = new ResponseBuilder<BookEntity[]>("", result);
-      return httpResponse.json(response);
+      let responseBody = new ResponseBuilder<BookEntity[]>("", result);
+      return response.json(responseBody);
     } catch (error) {
       next(error);
     }
   }
 
-  static async addBook(httpRequest: Request, httpResponse: Response, next) {
+  static async addBook(request: Request, response: Response, next) {
     try {
-      const book = httpRequest.body;
+      const book = request.body;
       const result = await BookController.bookService.addEntity(book);
-      let response = new ResponseBuilder<string>("", result);
-      return httpResponse.status(201).json(response);
+      let responseBody = new ResponseBuilder<string>("", result);
+      return response.status(201).json(responseBody);
     } catch (error) {
       next(error);
     }
   }
 
-  static async updateBook(httpRequest: Request, httpResponse: Response, next) {
+  static async updateBook(request: Request, response: Response, next) {
     try {
-      const id = httpRequest.params["id"];
-      const book: BookEntity = httpRequest.body;
+      const id = request.params["id"];
+      const book: BookEntity = request.body;
       const result = await BookController.bookService.updateEntity(id, book);
-      const response = new ResponseBuilder<string>("", result);
-      return httpResponse.json(response);
+      const responseBody = new ResponseBuilder<string>("", result);
+      return response.json(responseBody);
     } catch (error) {
       next(error);
     }
   }
 
-  static async deleteBook(httpRequest: Request, httpResponse: Response, next) {
+  static async deleteBook(request: Request, response: Response, next) {
     try {
-      const id = httpRequest.params["id"];
+      const id = request.params["id"];
       const result = await BookController.bookService.deleteEntity(id);
-      const response = new ResponseBuilder<string>("", result);
-      return httpResponse.json(response);
+      const responseBody = new ResponseBuilder<string>("", result);
+      return response.json(responseBody);
     } catch (error) {
       next(error);
     }
   }
 
-  static async getBook(httpRequest: Request, httpResponse: Response, next) {
+  static async getBook(request: Request, response: Response, next) {
     try {
-      const id = httpRequest.params["id"];
+      const id = request.params["id"];
       const result = await BookController.bookService.getEntity(id);
-      const response = new ResponseBuilder<Document>().setPayload(result);
-      return httpResponse.json(response);
+      const responseBody = new ResponseBuilder<Document>().setPayload(result);
+      return response.json(responseBody);
     } catch (error) {
       next(error);
     }
   }
 
-  static async wrongRoute(httpRequest: Request, httpResponse: Response) {
+  static async wrongRoute(request: Request, response: Response) {
     console.log("wrong");
-    return httpResponse.status(404).json({ result: "wrong route" });
+    return response.status(404).json({ result: "wrong route" });
   }
 }
 

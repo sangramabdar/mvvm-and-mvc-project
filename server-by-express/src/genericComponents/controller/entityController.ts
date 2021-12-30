@@ -4,11 +4,11 @@ import { statusCodeHandler } from "../../helper/validation";
 import { EntityService } from "../service/entityServive";
 
 interface EntityController<T> {
-  getEntity(httpRequest: Request, httpResponse: Response);
-  getAllEntities(httpRequest: Request, httpResponse: Response);
-  addEntity(httpRequest: Request, httpResponse: Response);
-  updateEntity(httpRequest: Request, httpResponse: Response);
-  deleteEntity(httpRequest: Request, httpResponse: Response);
+  getEntity(request: Request, response: Response);
+  getAllEntities(request: Request, response: Response);
+  addEntity(request: Request, response: Response);
+  updateEntity(request: Request, response: Response);
+  deleteEntity(request: Request, response: Response);
 }
 
 class EntityControllerImpl<E, T extends EntityService<E>>
@@ -16,69 +16,69 @@ class EntityControllerImpl<E, T extends EntityService<E>>
 {
   entityService: T;
 
-  async getEntity(httpRequest: Request, httpResponse: Response) {
+  async getEntity(request: Request, response: Response) {
     try {
-      console.log(httpRequest.params);
-      const id = httpRequest.params["id"];
+      console.log(request.params);
+      const id = request.params["id"];
       const result = await this.entityService.getEntity(id);
-      const response = new ResponseBuilder<Document>().setPayload(result);
-      return httpResponse.json(response);
+      const responseBody = new ResponseBuilder<Document>().setPayload(result);
+      return response.json(responseBody);
     } catch (error) {
-      let response = new ResponseBuilder<string>(error.message);
-      statusCodeHandler(error, response, httpResponse);
-      return httpResponse.json(response);
+      let responseBody = new ResponseBuilder<string>(error.message);
+      statusCodeHandler(error, responseBody, response);
+      return response.json(responseBody);
     }
   }
 
-  async getAllEntities(httpRequest: Request, httpResponse: Response) {
+  async getAllEntities(request: Request, response: Response) {
     try {
       const result = await this.entityService.getAllEntities();
-      let response = new ResponseBuilder<E[]>("", result);
-      return httpResponse.json(response);
+      let responseBody = new ResponseBuilder<E[]>("", result);
+      return response.json(responseBody);
     } catch (error) {
-      let response = new ResponseBuilder<string>(error.message);
-      statusCodeHandler(error, response, httpResponse);
-      return httpResponse.json(response);
+      let responseBody = new ResponseBuilder<string>(error.message);
+      statusCodeHandler(error, responseBody, response);
+      return response.json(response);
     }
   }
 
-  async addEntity(httpRequest: Request, httpResponse: Response) {
+  async addEntity(request: Request, response: Response) {
     try {
-      const user: E = httpRequest.body;
+      const user: E = request.body;
       const result = await this.entityService.addEntity(user);
-      let response = new ResponseBuilder<string>("", result);
-      return httpResponse.status(201).json(response);
+      let responseBody = new ResponseBuilder<string>("", result);
+      return response.status(201).json(responseBody);
     } catch (error) {
-      let response = new ResponseBuilder<string>(error.message);
-      statusCodeHandler(error, response, httpResponse);
-      return httpResponse.json(response);
+      let responseBody = new ResponseBuilder<string>(error.message);
+      statusCodeHandler(error, responseBody, response);
+      return response.json(response);
     }
   }
 
-  async updateEntity(httpRequest: Request, httpResponse: Response) {
+  async updateEntity(request: Request, response: Response) {
     try {
-      const id = httpRequest.params["id"];
-      const user: E = httpRequest.body;
+      const id = request.params["id"];
+      const user: E = request.body;
       const result = await this.entityService.updateEntity(id, user);
-      const response = new ResponseBuilder<string>("", result);
-      return httpResponse.json(response);
+      const responseBody = new ResponseBuilder<string>("", result);
+      return response.json(responseBody);
     } catch (error) {
-      let response = new ResponseBuilder<string>(error.message);
-      statusCodeHandler(error, response, httpResponse);
-      return httpResponse.json(response);
+      let responseBody = new ResponseBuilder<string>(error.message);
+      statusCodeHandler(error, responseBody, response);
+      return response.json(responseBody);
     }
   }
 
-  async deleteEntity(httpRequest: Request, httpResponse: Response) {
+  async deleteEntity(request: Request, response: Response) {
     try {
-      const id = httpRequest.params["id"];
+      const id = request.params["id"];
       const result = await this.entityService.deleteEntity(id);
-      const response = new ResponseBuilder<string>("", result);
-      return httpResponse.json(response);
+      const responseBody = new ResponseBuilder<string>("", result);
+      return response.json(responseBody);
     } catch (error) {
-      let response = new ResponseBuilder<string>(error.message);
-      statusCodeHandler(error, response, httpResponse);
-      return httpResponse.json(response);
+      let responseBody = new ResponseBuilder<string>(error.message);
+      statusCodeHandler(error, responseBody, response);
+      return response.json(response);
     }
   }
 }

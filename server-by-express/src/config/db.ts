@@ -22,7 +22,7 @@ class Database {
 
     //this is for checking db object is still alive or not
     try {
-      await Database.db!!.collections();
+      Database.db!!.databaseName;
     } catch (error) {
       Database.db = null;
     }

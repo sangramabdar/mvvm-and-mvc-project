@@ -1,24 +1,24 @@
 import { Router } from "express";
 import {
-  bodyValidation,
-  idValidation,
-  schemaValidation,
+  validateBody,
+  validateId,
+  validateSchema,
 } from "../../helper/validation";
 import { UserController } from "./user.controller";
-import { UserEntity, UserJoi } from "./user.entity";
+import { UserEntity, UserSchema } from "./user.entity";
 
 const UserRouter = Router();
 
 UserRouter.get("/", UserController.getUsers);
-UserRouter.get("/:id", idValidation, UserController.getUser);
-UserRouter.post("/", userValidation, UserController.addUser);
-UserRouter.put("/:id", idValidation, bodyValidation, UserController.updateUser);
-UserRouter.delete("/:id", idValidation, UserController.deleteUser);
+UserRouter.get("/:id", validateId, UserController.getUser);
+UserRouter.post("/", validateUser, UserController.addUser);
+UserRouter.put("/:id", validateId, validateBody, UserController.updateUser);
+UserRouter.delete("/:id", validateId, UserController.deleteUser);
 
-async function userValidation(httpRequest, httpResponse, next) {
+async function validateUser(request, response, next) {
   try {
-    const user: UserEntity = httpRequest.body;
-    await UserJoi.validateAsync(user);
+    const user: UserEntity = request.body;
+    await UserSchema.validateAsync(user);
     next();
   } catch (error) {
     next(error);
