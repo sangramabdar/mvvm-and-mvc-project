@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
-import Joi, { isSchema } from "joi";
 import { ObjectId } from "mongodb";
-import BaseEntity from "../entity/baseEntity";
-import { createBook } from "../entity/book/book.entity";
-import { createUser } from "../entity/user/user.entity";
+import { newType, Prop } from "../entity/user/user.entity";
 
 import {
   DataBaseConnectionError,
@@ -13,22 +10,6 @@ import {
 import ResponseBuilder from "./responseBuilder";
 
 type entityTypes = "user" | "book";
-
-async function schemaValidation<T extends BaseEntity>(
-  entity: T,
-  whichEntity: entityTypes
-) {
-  switch (whichEntity) {
-    case "user":
-      let user = createUser();
-      var keys = Object.keys(user);
-      return await keysValidation(keys, entity);
-    case "book":
-      let book = createBook();
-      var keys = Object.keys(book);
-      return await keysValidation(keys, entity);
-  }
-}
 
 async function keysValidation(keys: string[], entity: any) {
   let dataKeys = Object.keys(entity);
@@ -44,19 +25,6 @@ async function keysValidation(keys: string[], entity: any) {
     }
   }
   return newData;
-}
-
-async function validateSchema<T extends BaseEntity>(
-  request: Request,
-  response,
-  next
-) {
-  try {
-    console.log(request.path);
-    await schemaValidation<T>(request.body, "user");
-  } catch (error) {
-    next(error);
-  }
 }
 
 function statusCodeHandler(
@@ -103,16 +71,7 @@ async function validateBody(request: Request, $: Response, next) {
   }
 }
 
-async function validateKeysForPut(
-  entity: { [key: string]: string },
-  body: {}
-) {}
-
-async function validateKeys(
-  entity: { [key: string]: string },
-  body: {},
-  method: "POST" | "PUT"
-) {
+async function validateKeys(entity: any, body: {}, method: "POST" | "PUT") {
   switch (method) {
     case "POST":
       var keys = Object.keys(entity);
@@ -122,8 +81,12 @@ async function validateKeys(
           throw new Error(`${key} must be there`);
         }
 
-        if (typeof body[key] !== entity[key]) {
-          throw new Error(`${key} must be ${entity[key]}`);
+        if (typeof body[key] !== entity[key].type) {
+          throw new Error(`${key} must be ${entity[key].type}`);
+        }
+
+        if (!entity[key].condition(body[key])) {
+          throw new Error(entity[key].error);
         }
         newObject[key] = body[key];
       }
@@ -135,11 +98,8 @@ async function validateKeys(
       var newObject = {};
 
       for (let key of keys) {
-        // if (!(key in entity)) {
-        //   throw new Error(`${key} is not a part of that schema`);
-        // }
         if (key in entity) {
-          if (typeof body[key] !== entity[key]) {
+          if (typeof body[key] !== entity[key].type) {
             throw new Error(`${key} must be ${entity[key]}`);
           }
           newObject[key] = body[key];
@@ -149,10 +109,4 @@ async function validateKeys(
   }
 }
 
-export {
-  statusCodeHandler,
-  validateSchema,
-  validateId,
-  validateBody,
-  validateKeys,
-};
+export { statusCodeHandler, validateId, validateBody, validateKeys };

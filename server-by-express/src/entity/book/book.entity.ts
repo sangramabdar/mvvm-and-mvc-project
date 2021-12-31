@@ -1,20 +1,23 @@
-import Joi from "joi";
 import BaseEntity from "../baseEntity";
+import { newType } from "../user/user.entity";
 
 interface BookEntity extends BaseEntity {
   name: string;
   isbn: string;
 }
 
-const BookEntityKeys = {
-  name: "string",
-  isbn: "string",
+const bookEntityProps: newType<BookEntity> = {
+  name: {
+    type: "string",
+    condition: (_name: string) => (_name.length > 0 ? true : false),
+    error: "name should not be empty",
+  },
+  isbn: {
+    type: "string",
+    condition: (_isbn: string) => (_isbn.length > 0 ? true : false),
+    error: "isbn should not be empty",
+  },
 };
-
-const BookSchema = Joi.object<BookEntity>({
-  name: Joi.string().required(),
-  isbn: Joi.number().integer().required(),
-});
 
 function createBook(): BookEntity {
   return {
@@ -23,4 +26,4 @@ function createBook(): BookEntity {
   };
 }
 
-export { BookSchema, createBook, BookEntity, BookEntityKeys };
+export { createBook, BookEntity, bookEntityProps };

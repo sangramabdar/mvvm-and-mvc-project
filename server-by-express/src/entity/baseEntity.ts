@@ -4,4 +4,6 @@ interface BaseEntity {
   _id?: ObjectId;
 }
 
+
+
 export default BaseEntity;

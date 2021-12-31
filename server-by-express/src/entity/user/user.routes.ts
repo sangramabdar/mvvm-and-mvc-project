@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 
 import {
   validateBody,
@@ -6,41 +6,29 @@ import {
   validateKeys,
 } from "../../helper/validation";
 import { UserController } from "./user.controller";
-import { UserEntityKeys } from "./user.entity";
+import { newType, UserEntity, userEntityProps } from "./user.entity";
 
 const UserRouter = Router();
 
 UserRouter.get("/", UserController.getUsers);
 UserRouter.get("/:id", validateId, UserController.getUser);
-UserRouter.post(
-  "/",
-  validateBody,
-  validateSchemaForPost,
-  UserController.addUser
-);
+UserRouter.post("/", validateBody, validateSchema, UserController.addUser);
 UserRouter.put(
   "/:id",
   validateId,
   validateBody,
-  validateSchemaForPut,
+  validateSchema,
   UserController.updateUser
 );
 UserRouter.delete("/:id", validateId, UserController.deleteUser);
 
-async function validateSchemaForPut(request, response, next) {
+async function validateSchema(request: Request, response: Response, next) {
   try {
-    const body = await validateKeys(UserEntityKeys, request.body, "PUT");
-    request.body = body;
-    next();
-  } catch (error) {
-    next(error);
-  }
-}
-
-async function validateSchemaForPost(request, response, next) {
-  try {
-    const body = await validateKeys(UserEntityKeys, request.body, "POST");
-    request.body = body;
+    if (request.method === "POST") {
+      request.body = await validateKeys(userEntityProps, request.body, "POST");
+    } else {
+      request.body = await validateKeys(userEntityProps, request.body, "PUT");
+    }
     next();
   } catch (error) {
     next(error);
