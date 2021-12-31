@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { string } from "joi";
 import { ObjectId } from "mongodb";
 import { newType, Prop } from "../entity/user/user.entity";
 
@@ -64,18 +65,18 @@ async function validateBody(request: Request, $: Response, next) {
   try {
     if (Object.keys(request.body).length == 0)
       throw new Error("body should not be empty");
-
     next();
   } catch (error) {
     next(error);
   }
 }
 
-async function validateKeys(entity: any, body: {}, method: "POST" | "PUT") {
+async function validateKeys<T>(entity: any, body: {}, method: "POST" | "PUT") {
+  let newObject = {};
   switch (method) {
     case "POST":
       var keys = Object.keys(entity);
-      var newObject = {};
+
       for (let key of keys) {
         if (!(key in body)) {
           throw new Error(`${key} must be there`);
@@ -90,23 +91,26 @@ async function validateKeys(entity: any, body: {}, method: "POST" | "PUT") {
         }
         newObject[key] = body[key];
       }
-      return newObject;
+      break;
 
     case "PUT":
       var keys = Object.keys(body);
-
-      var newObject = {};
 
       for (let key of keys) {
         if (key in entity) {
           if (typeof body[key] !== entity[key].type) {
             throw new Error(`${key} must be ${entity[key]}`);
           }
+
+          if (!entity[key].condition(body[key])) {
+            throw new Error(entity[key].error);
+          }
           newObject[key] = body[key];
         }
       }
-      return newObject;
+      break;
   }
+  return newObject;
 }
 
 export { statusCodeHandler, validateId, validateBody, validateKeys };

@@ -6,7 +6,7 @@ import {
   validateKeys,
 } from "../../helper/validation";
 import { UserController } from "./user.controller";
-import { newType, UserEntity, userEntityProps } from "./user.entity";
+import { userEntityProps } from "./user.entity";
 
 const UserRouter = Router();
 
