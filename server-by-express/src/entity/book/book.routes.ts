@@ -4,10 +4,9 @@ import {
   validateBody,
   validateKeys,
 } from "../../helper/validation";
-import { newType } from "../user/user.entity";
 
 import BookController from "./book.controller";
-import { BookEntity, bookEntityProps } from "./book.entity";
+import { BookSchema } from "./book.entity";
 
 const BookRouter = Router();
 
@@ -26,9 +25,9 @@ BookRouter.delete("/:id", validateId, BookController.deleteBook);
 async function validateSchema(request: Request, response: Response, next) {
   try {
     if (request.method === "POST") {
-      request.body = await validateKeys(bookEntityProps, request.body, "POST");
+      request.body = await validateKeys(BookSchema, request.body, "POST");
     } else {
-      request.body = await validateKeys(bookEntityProps, request.body, "PUT");
+      request.body = await validateKeys(BookSchema, request.body, "PUT");
     }
     next();
   } catch (error) {

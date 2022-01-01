@@ -53,7 +53,6 @@ class EntityServiceImpl<E, T extends Repository<E>>
     if (!db) {
       throw new DataBaseConnectionError();
     }
-    console.log("add");
     await this.entityRepository.add(entity, db);
     return "added";
   }

@@ -1,3 +1,4 @@
+import { isStringNotEmpty } from "../../helper/validationFunctions";
 import BaseEntity from "../baseEntity";
 import { newType } from "../user/user.entity";
 
@@ -7,15 +8,15 @@ interface BookEntity extends BaseEntity {
   date: Date;
 }
 
-const bookEntityProps: newType<Partial<BookEntity>> = {
+const BookSchema: newType<Partial<BookEntity>> = {
   name: {
     type: "string",
-    condition: (_name: string) => _name.length > 0,
+    condition: isStringNotEmpty,
     error: "name should not be empty",
   },
   isbn: {
     type: "string",
-    condition: (_isbn: string) => _isbn.length > 0,
+    condition: isStringNotEmpty,
     error: "isbn should not be empty",
   },
 };
@@ -28,4 +29,4 @@ const bookEntityProps: newType<Partial<BookEntity>> = {
 //   };
 // }
 
-export { BookEntity, bookEntityProps };
+export { BookEntity, BookSchema };

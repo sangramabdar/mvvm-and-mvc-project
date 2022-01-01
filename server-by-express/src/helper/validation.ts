@@ -10,8 +10,6 @@ import {
 } from "./exceptions";
 import ResponseBuilder from "./responseBuilder";
 
-type entityTypes = "user" | "book";
-
 async function keysValidation(keys: string[], entity: any) {
   let dataKeys = Object.keys(entity);
 
@@ -76,7 +74,6 @@ async function validateKeys<T>(entity: any, body: {}, method: "POST" | "PUT") {
   switch (method) {
     case "POST":
       var keys = Object.keys(entity);
-
       for (let key of keys) {
         if (!(key in body)) {
           throw new Error(`${key} must be there`);
@@ -95,7 +92,6 @@ async function validateKeys<T>(entity: any, body: {}, method: "POST" | "PUT") {
 
     case "PUT":
       var keys = Object.keys(body);
-
       for (let key of keys) {
         if (key in entity) {
           if (typeof body[key] !== entity[key].type) {

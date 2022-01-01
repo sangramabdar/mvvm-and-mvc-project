@@ -6,7 +6,7 @@ import {
   validateKeys,
 } from "../../helper/validation";
 import { UserController } from "./user.controller";
-import { userEntityProps } from "./user.entity";
+import { UserSchema } from "./user.entity";
 
 const UserRouter = Router();
 
@@ -25,9 +25,9 @@ UserRouter.delete("/:id", validateId, UserController.deleteUser);
 async function validateSchema(request: Request, response: Response, next) {
   try {
     if (request.method === "POST") {
-      request.body = await validateKeys(userEntityProps, request.body, "POST");
+      request.body = await validateKeys(UserSchema, request.body, "POST");
     } else {
-      request.body = await validateKeys(userEntityProps, request.body, "PUT");
+      request.body = await validateKeys(UserSchema, request.body, "PUT");
     }
     next();
   } catch (error) {

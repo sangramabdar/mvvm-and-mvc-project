@@ -23,7 +23,7 @@ class UserController {
     try {
       const user: UserEntity = request.body;
       const result = await UserController.userService.addEntity(user);
-      let responseBody = new ResponseBuilder<string>("", result);
+      let responseBody = new ResponseBuilder<string>("", result).setStatus(201);
       return response.status(201).json(responseBody);
     } catch (error) {
       next(error);
@@ -34,7 +34,6 @@ class UserController {
     try {
       const id = request.params["id"];
       const user: UserEntity = request.body;
-      console.log(user);
       const result = await UserController.userService.updateEntity(id, user);
       const responseBody = new ResponseBuilder<string>("", result);
       return response.json(responseBody);

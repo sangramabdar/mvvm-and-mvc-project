@@ -1,3 +1,4 @@
+import { isStringNotEmpty } from "../../helper/validationFunctions";
 import BaseEntity from "../baseEntity";
 
 interface UserEntity extends BaseEntity {
@@ -17,10 +18,10 @@ type newType<T> = {
   [K in keyof T]: Prop<T[K]>;
 };
 
-const userEntityProps: newType<Partial<UserEntity>> = {
+const UserSchema: newType<Partial<UserEntity>> = {
   name: {
     type: "string",
-    condition: (_name: string) => _name.length > 0,
+    condition: isStringNotEmpty,
     error: "name should not be empty",
   },
   age: {
@@ -30,7 +31,7 @@ const userEntityProps: newType<Partial<UserEntity>> = {
   },
   address: {
     type: "string",
-    condition: (_address: string) => _address.length > 0,
+    condition: isStringNotEmpty,
     error: "address should not be empty",
   },
   gender: {
@@ -40,12 +41,4 @@ const userEntityProps: newType<Partial<UserEntity>> = {
   },
 };
 
-// function createUser(): UserEntity {
-//   return {
-//     age: 22,
-//     name: "",
-//     address: "",
-//   };
-// }
-
-export { UserEntity, userEntityProps, Prop, newType };
+export { UserEntity, UserSchema, Prop, newType };

@@ -1,7 +1,7 @@
 class ResponseBuilder<T> {
   private timeStamp: number;
-  private error: string = "";
-  private status: number = 200;
+  private error: string;
+  private status: number;
   private payload: T | {};
 
   constructor(error: string = "", payload: T | {} = {}, status: number = 200) {
