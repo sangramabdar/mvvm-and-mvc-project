@@ -1,4 +1,6 @@
-import { isStringNotEmpty } from "../../helper/validationFunctions";
+import { Request, Response } from "express";
+import { validateSchema } from "../../helper/validation";
+import { isNameValid } from "../../helper/validationFunctions";
 import BaseEntity from "../baseEntity";
 
 interface UserEntity extends BaseEntity {
@@ -21,8 +23,8 @@ type newType<T> = {
 const UserSchema: newType<Partial<UserEntity>> = {
   name: {
     type: "string",
-    condition: isStringNotEmpty,
-    error: "name should not be empty",
+    condition: isNameValid,
+    error: "name should contain 5 to 12 character",
   },
   age: {
     type: "number",
@@ -31,7 +33,7 @@ const UserSchema: newType<Partial<UserEntity>> = {
   },
   address: {
     type: "string",
-    condition: isStringNotEmpty,
+    condition: isNameValid,
     error: "address should not be empty",
   },
   gender: {
@@ -41,4 +43,17 @@ const UserSchema: newType<Partial<UserEntity>> = {
   },
 };
 
-export { UserEntity, UserSchema, Prop, newType };
+async function validateUserSchema(request: Request, response: Response, next) {
+  try {
+    if (request.method === "POST") {
+      request.body = await validateSchema(UserSchema, request.body, "POST");
+    } else {
+      request.body = await validateSchema(UserSchema, request.body, "PUT");
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export { UserEntity, UserSchema, Prop, newType, validateUserSchema };

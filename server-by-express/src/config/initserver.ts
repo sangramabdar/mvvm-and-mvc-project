@@ -8,7 +8,11 @@ const app = Express();
 async function initServer() {
   try {
     app.use(cors());
-    app.use(Express.json());
+    app.use(
+      Express.json({
+        type: ["json"],
+      })
+    );
     await initRoutes();
     console.log("server is initialized");
   } catch (error) {

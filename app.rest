@@ -1,3 +1,1 @@
 DELETE  http://localhost:8080/book/61c2c72cfc2d296f0fbcfdd2
-
-

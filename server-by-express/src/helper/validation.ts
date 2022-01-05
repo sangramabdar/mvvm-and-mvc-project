@@ -1,14 +1,8 @@
 import { Request, Response } from "express";
-import { string } from "joi";
 import { ObjectId } from "mongodb";
-import { newType, Prop } from "../entity/user/user.entity";
+import { newType } from "../entity/user/user.entity";
 
-import {
-  DataBaseConnectionError,
-  EntityNotFound,
-  WrongContent,
-} from "./exceptions";
-import ResponseBuilder from "./responseBuilder";
+import { WrongContent } from "./exceptions";
 
 async function keysValidation(keys: string[], entity: any) {
   let dataKeys = Object.keys(entity);
@@ -26,32 +20,12 @@ async function keysValidation(keys: string[], entity: any) {
   return newData;
 }
 
-function statusCodeHandler(
-  error: Error,
-  res: ResponseBuilder<string>,
-  response: Response
-) {
-  if (error instanceof DataBaseConnectionError) {
-    res.setStatus(500);
-    response.statusCode = 500;
-  } else if (error instanceof EntityNotFound) {
-    res.setStatus(404);
-    response.statusCode = 404;
-  } else if (error instanceof WrongContent) {
-    res.setStatus(422);
-    response.statusCode = 422;
-  } else {
-    res.setStatus(400);
-    response.statusCode = 400;
-  }
-}
-
 async function validateId(request: Request, response: Response, next) {
   try {
     var id = request.params["id"];
     var isValid = ObjectId.isValid(id);
     if (!isValid) {
-      throw new WrongContent("id format is not correct");
+      throw new WrongContent("id is in wrong format");
     }
     next();
   } catch (error) {
@@ -69,11 +43,17 @@ async function validateBody(request: Request, $: Response, next) {
   }
 }
 
-async function validateKeys<T>(entity: any, body: {}, method: "POST" | "PUT") {
+async function validateSchema<T>(
+  entity: newType<T>,
+  body: {},
+  method: "POST" | "PUT"
+): Promise<{}> {
   let newObject = {};
+
   switch (method) {
     case "POST":
       var keys = Object.keys(entity);
+
       for (let key of keys) {
         if (!(key in body)) {
           throw new Error(`${key} must be there`);
@@ -109,4 +89,4 @@ async function validateKeys<T>(entity: any, body: {}, method: "POST" | "PUT") {
   return newObject;
 }
 
-export { statusCodeHandler, validateId, validateBody, validateKeys };
+export { validateId, validateBody, validateSchema };

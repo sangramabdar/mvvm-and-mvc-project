@@ -1,3 +1,3 @@
-const isStringNotEmpty = (value: string) => value.length > 0;
+const isNameValid = (value: string) => value.length >= 5 && value.length <= 12;
 
-export { isStringNotEmpty };
+export { isNameValid };

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import ResponseBuilder from "../../helper/responseBuilder";
+import ResponseBodyBuilder from "../../helper/responseBodyBuilder";
 import { statusCodeHandler } from "../../helper/validation";
 import { EntityService } from "../service/entityServive";
 
@@ -21,10 +21,12 @@ class EntityControllerImpl<E, T extends EntityService<E>>
       console.log(request.params);
       const id = request.params["id"];
       const result = await this.entityService.getEntity(id);
-      const responseBody = new ResponseBuilder<Document>().setPayload(result);
+      const responseBody = new ResponseBodyBuilder<Document>().setPayload(
+        result
+      );
       return response.json(responseBody);
     } catch (error) {
-      let responseBody = new ResponseBuilder<string>(error.message);
+      let responseBody = new ResponseBodyBuilder<string>(error.message);
       statusCodeHandler(error, responseBody, response);
       return response.json(responseBody);
     }
@@ -33,10 +35,10 @@ class EntityControllerImpl<E, T extends EntityService<E>>
   async getAllEntities(request: Request, response: Response) {
     try {
       const result = await this.entityService.getAllEntities();
-      let responseBody = new ResponseBuilder<E[]>("", result);
+      let responseBody = new ResponseBodyBuilder<E[]>("", result);
       return response.json(responseBody);
     } catch (error) {
-      let responseBody = new ResponseBuilder<string>(error.message);
+      let responseBody = new ResponseBodyBuilder<string>(error.message);
       statusCodeHandler(error, responseBody, response);
       return response.json(response);
     }
@@ -46,10 +48,10 @@ class EntityControllerImpl<E, T extends EntityService<E>>
     try {
       const user: E = request.body;
       const result = await this.entityService.addEntity(user);
-      let responseBody = new ResponseBuilder<string>("", result);
+      let responseBody = new ResponseBodyBuilder<string>("", result);
       return response.status(201).json(responseBody);
     } catch (error) {
-      let responseBody = new ResponseBuilder<string>(error.message);
+      let responseBody = new ResponseBodyBuilder<string>(error.message);
       statusCodeHandler(error, responseBody, response);
       return response.json(response);
     }
@@ -60,10 +62,10 @@ class EntityControllerImpl<E, T extends EntityService<E>>
       const id = request.params["id"];
       const user: E = request.body;
       const result = await this.entityService.updateEntity(id, user);
-      const responseBody = new ResponseBuilder<string>("", result);
+      const responseBody = new ResponseBodyBuilder<string>("", result);
       return response.json(responseBody);
     } catch (error) {
-      let responseBody = new ResponseBuilder<string>(error.message);
+      let responseBody = new ResponseBodyBuilder<string>(error.message);
       statusCodeHandler(error, responseBody, response);
       return response.json(responseBody);
     }
@@ -73,10 +75,10 @@ class EntityControllerImpl<E, T extends EntityService<E>>
     try {
       const id = request.params["id"];
       const result = await this.entityService.deleteEntity(id);
-      const responseBody = new ResponseBuilder<string>("", result);
+      const responseBody = new ResponseBodyBuilder<string>("", result);
       return response.json(responseBody);
     } catch (error) {
-      let responseBody = new ResponseBuilder<string>(error.message);
+      let responseBody = new ResponseBodyBuilder<string>(error.message);
       statusCodeHandler(error, responseBody, response);
       return response.json(response);
     }

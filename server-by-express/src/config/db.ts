@@ -12,8 +12,9 @@ class Database {
         serverSelectionTimeoutMS: 2000,
       }).connect();
       Database.db = Database.mongoClient.db(Database.DB_NAME);
+      console.log("database is connected");
     } catch (error) {
-      console.log("database server is not running");
+      console.log("database is not connected");
     }
   }
 

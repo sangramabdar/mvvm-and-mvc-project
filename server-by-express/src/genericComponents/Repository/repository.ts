@@ -28,8 +28,6 @@ class RepositoryImpl<T> implements Repository<T> {
     const insertOneResult = await db
       .collection(this._collection)
       .insertOne(element);
-
-    console.log(insertOneResult);
   }
 
   async updateById(id: string, element: T, db: Db): Promise<boolean> {

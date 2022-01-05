@@ -1,4 +1,6 @@
-import { isStringNotEmpty } from "../../helper/validationFunctions";
+import { Request, Response } from "express";
+import { validateSchema } from "../../helper/validation";
+import { isNameValid } from "../../helper/validationFunctions";
 import BaseEntity from "../baseEntity";
 import { newType } from "../user/user.entity";
 
@@ -11,22 +13,27 @@ interface BookEntity extends BaseEntity {
 const BookSchema: newType<Partial<BookEntity>> = {
   name: {
     type: "string",
-    condition: isStringNotEmpty,
-    error: "name should not be empty",
+    condition: isNameValid,
+    error: "name should contain 5 to 12 characters",
   },
   isbn: {
     type: "string",
-    condition: isStringNotEmpty,
-    error: "isbn should not be empty",
+    condition: isNameValid,
+    error: "isbn should contain 5 to 12 characters",
   },
 };
 
-// function createBook(): BookEntity {
-//   return {
-//     name: "",
-//     isbn: "",
-//     data: new Date(),
-//   };
-// }
+async function validateBookSchema(request: Request, response: Response, next) {
+  try {
+    if (request.method === "POST") {
+      request.body = await validateSchema(BookSchema, request.body, "POST");
+    } else {
+      request.body = await validateSchema(BookSchema, request.body, "PUT");
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
 
-export { BookEntity, BookSchema };
+export { BookEntity, BookSchema, validateBookSchema };

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import ResponseBuilder from "../../helper/responseBuilder";
+import ResponseBodyBuilder from "../../helper/responseBodyBuilder";
 import { BookService, BookServiceImpl } from "./book.service";
 import { BookEntity } from "./book.repository";
 
@@ -9,7 +9,7 @@ class BookController {
   static async getBooks(request: Request, response: Response, next) {
     try {
       const result = await BookController.bookService.getAllEntities();
-      let responseBody = new ResponseBuilder<BookEntity[]>("", result);
+      let responseBody = new ResponseBodyBuilder<BookEntity[]>("", result);
       return response.json(responseBody);
     } catch (error) {
       next(error);
@@ -20,7 +20,7 @@ class BookController {
     try {
       const book = request.body;
       const result = await BookController.bookService.addEntity(book);
-      let responseBody = new ResponseBuilder<string>("", result);
+      let responseBody = new ResponseBodyBuilder<string>("", result);
       return response.status(201).json(responseBody);
     } catch (error) {
       next(error);
@@ -32,7 +32,7 @@ class BookController {
       const id = request.params["id"];
       const book: BookEntity = request.body;
       const result = await BookController.bookService.updateEntity(id, book);
-      const responseBody = new ResponseBuilder<string>("", result);
+      const responseBody = new ResponseBodyBuilder<string>("", result);
       return response.json(responseBody);
     } catch (error) {
       next(error);
@@ -43,7 +43,7 @@ class BookController {
     try {
       const id = request.params["id"];
       const result = await BookController.bookService.deleteEntity(id);
-      const responseBody = new ResponseBuilder<string>("", result);
+      const responseBody = new ResponseBodyBuilder<string>("", result);
       return response.json(responseBody);
     } catch (error) {
       next(error);
@@ -54,7 +54,9 @@ class BookController {
     try {
       const id = request.params["id"];
       const result = await BookController.bookService.getEntity(id);
-      const responseBody = new ResponseBuilder<Document>().setPayload(result);
+      const responseBody = new ResponseBodyBuilder<Document>().setPayload(
+        result
+      );
       return response.json(responseBody);
     } catch (error) {
       next(error);

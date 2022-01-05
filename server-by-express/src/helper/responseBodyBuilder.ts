@@ -1,4 +1,4 @@
-class ResponseBuilder<T> {
+class ResponseBodyBuilder<T> {
   private timeStamp: number;
   private error: string;
   private status: number;
@@ -31,4 +31,4 @@ class ResponseBuilder<T> {
   }
 }
 
-export default ResponseBuilder;
+export default ResponseBodyBuilder;
