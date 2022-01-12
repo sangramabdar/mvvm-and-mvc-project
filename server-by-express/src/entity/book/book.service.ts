@@ -1,7 +1,7 @@
 import {
   EntityService,
   EntityServiceImpl,
-} from "../../genericComponents/service/entityServive";
+} from "../../common/genericComponents/service/entityServive";
 import {
   BookEntity,
   BookRepository,

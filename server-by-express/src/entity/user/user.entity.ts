@@ -3,9 +3,8 @@ import { Request, Response } from "express";
 import {
   StringSchema,
   NumberSchema,
-  GenderSchema,
   Schema,
-} from "../../helper/DataSchema";
+} from "../../common/schemaValidation/schema";
 import { validateSchema } from "../../helper/validation";
 
 import BaseEntity from "../baseEntity";
@@ -15,6 +14,7 @@ interface UserEntity extends BaseEntity {
   age: number;
   address: string;
   gender: string;
+  email: string;
 }
 
 interface Prop<T> {
@@ -27,16 +27,19 @@ type newType<T> = {
 
 const UserSchema: newType<Partial<UserEntity>> = {
   name: {
-    schema: new StringSchema("address").max(12).min(2).required(),
+    schema: new StringSchema("address").max(12).min(2).onlyAplhabates(),
   },
   age: {
-    schema: new NumberSchema("age").notNegative(),
+    schema: new NumberSchema("age").notNegative().max(100).min(18),
   },
   gender: {
-    schema: new GenderSchema("gender").maleOrfemale(),
+    schema: new StringSchema("gender").of(["male", "female"]),
   },
   address: {
-    schema: new StringSchema("address").max(12).min(2).required(),
+    schema: new StringSchema("address").max(12).min(2),
+  },
+  email: {
+    schema: new StringSchema("email").email(),
   },
 };
 

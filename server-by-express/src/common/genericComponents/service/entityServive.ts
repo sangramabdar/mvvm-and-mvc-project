@@ -1,8 +1,8 @@
-import Database from "../../config/db";
+import Database from "../../../config/db";
 import {
   DataBaseConnectionError,
   EntityNotFound,
-} from "../../helper/exceptions";
+} from "../../../helper/exceptions";
 
 import { Repository } from "../Repository/repository";
 

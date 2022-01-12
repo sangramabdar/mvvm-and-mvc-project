@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { StringSchema } from "../../helper/DataSchema";
+import { StringSchema } from "../../common/schemaValidation/schema";
 import { validateSchema } from "../../helper/validation";
 import BaseEntity from "../baseEntity";
 import { newType } from "../user/user.entity";

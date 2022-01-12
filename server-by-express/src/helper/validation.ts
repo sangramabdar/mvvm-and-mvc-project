@@ -1,23 +1,25 @@
-import { Request, Response } from "express";
+import e, { Request, Response } from "express";
 import { ObjectId } from "mongodb";
+import { Schema } from "../common/schemaValidation/schema";
+import { newType } from "../entity/user/user.entity";
 
 import { WrongContent } from "./exceptions";
 
-async function keysValidation(keys: string[], entity: any) {
-  let dataKeys = Object.keys(entity);
+// async function keysValidation(keys: string[], entity: any) {
+//   let dataKeys = Object.keys(entity);
 
-  let newData = {};
-  dataKeys.forEach(key => {
-    newData[key.toLowerCase()] = entity[key];
-  });
+//   let newData = {};
+//   dataKeys.forEach(key => {
+//     newData[key.toLowerCase()] = entity[key];
+//   });
 
-  for (let key of keys) {
-    if (!newData[key]) {
-      throw new WrongContent("some information is not provided");
-    }
-  }
-  return newData;
-}
+//   for (let key of keys) {
+//     if (!newData[key]) {
+//       throw new WrongContent("some information is not provided");
+//     }
+//   }
+//   return newData;
+// }
 
 async function validateId(request: Request, response: Response, next) {
   try {
@@ -42,8 +44,8 @@ async function validateBody(request: Request, $: Response, next) {
   }
 }
 
-async function validateSchema<T>(
-  entity: any,
+async function validateSchema(
+  entity: {},
   body: {},
   method: "POST" | "PUT"
 ): Promise<{}> {
@@ -64,6 +66,7 @@ async function validateSchema<T>(
 
     case "PUT":
       var keys = Object.keys(body);
+
       for (let key of keys) {
         if (key in entity) {
           entity[key].schema.validate(body[key]);

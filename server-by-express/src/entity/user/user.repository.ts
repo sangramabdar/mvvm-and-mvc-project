@@ -1,7 +1,7 @@
 import {
   Repository,
   RepositoryImpl,
-} from "../../genericComponents/Repository/repository";
+} from "../../common/genericComponents/Repository/repository";
 import { UserEntity } from "./user.entity";
 
 interface UserRepository<T> extends Repository<T> {}

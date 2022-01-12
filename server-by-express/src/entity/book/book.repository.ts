@@ -1,7 +1,7 @@
 import {
   Repository,
   RepositoryImpl,
-} from "../../genericComponents/Repository/repository";
+} from "../../common/genericComponents/Repository/repository";
 import BaseEntity from "../baseEntity";
 import { BookEntity } from "./book.entity";
 
