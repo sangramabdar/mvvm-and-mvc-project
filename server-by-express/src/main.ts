@@ -1,5 +1,5 @@
 import { initServer, app } from "./config/initserver";
 
-initServer().then(r => {
+initServer().then(_ => {
   app.listen(8080);
 });

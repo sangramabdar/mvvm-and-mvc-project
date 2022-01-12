@@ -22,6 +22,7 @@ class UserController {
   static async addUser(request: Request, response: Response, next) {
     try {
       const user: UserEntity = request.body;
+      console.log(user);
       const result = await UserController.userService.addEntity(user);
       let responseBody = new ResponseBodyBuilder<string>("", result).setStatus(
         201

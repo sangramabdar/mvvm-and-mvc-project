@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
+import { StringSchema } from "../../helper/DataSchema";
 import { validateSchema } from "../../helper/validation";
-import { isNameValid } from "../../helper/validationFunctions";
 import BaseEntity from "../baseEntity";
 import { newType } from "../user/user.entity";
 
@@ -12,14 +12,10 @@ interface BookEntity extends BaseEntity {
 
 const BookSchema: newType<Partial<BookEntity>> = {
   name: {
-    type: "string",
-    condition: isNameValid,
-    error: "name should contain 5 to 12 characters",
+    schema: new StringSchema("name").max(12).min(2).onlyAplhabates(),
   },
   isbn: {
-    type: "string",
-    condition: isNameValid,
-    error: "isbn should contain 5 to 12 characters",
+    schema: new StringSchema("isbn").min(10).max(20).onlyDigits(),
   },
 };
 

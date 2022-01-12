@@ -1,19 +1,24 @@
 import { Request, Response } from "express";
+
+import {
+  StringSchema,
+  NumberSchema,
+  GenderSchema,
+  Schema,
+} from "../../helper/DataSchema";
 import { validateSchema } from "../../helper/validation";
-import { isNameValid } from "../../helper/validationFunctions";
+
 import BaseEntity from "../baseEntity";
 
 interface UserEntity extends BaseEntity {
   name: string;
   age: number;
   address: string;
-  gender: "male" | "female";
+  gender: string;
 }
 
 interface Prop<T> {
-  type: string;
-  condition: (prop: T) => boolean;
-  error: string;
+  schema: Schema<T>;
 }
 
 type newType<T> = {
@@ -22,24 +27,16 @@ type newType<T> = {
 
 const UserSchema: newType<Partial<UserEntity>> = {
   name: {
-    type: "string",
-    condition: isNameValid,
-    error: "name should contain 5 to 12 character",
+    schema: new StringSchema("address").max(12).min(2).required(),
   },
   age: {
-    type: "number",
-    condition: (_age: number) => _age >= 18 && _age <= 100,
-    error: "age should not be less than 18 or greater than 100",
-  },
-  address: {
-    type: "string",
-    condition: isNameValid,
-    error: "address should not be empty",
+    schema: new NumberSchema("age").notNegative(),
   },
   gender: {
-    type: "string",
-    condition: _gender => _gender === "male" || _gender === "female",
-    error: "gender must be male or female",
+    schema: new GenderSchema("gender").maleOrfemale(),
+  },
+  address: {
+    schema: new StringSchema("address").max(12).min(2).required(),
   },
 };
 

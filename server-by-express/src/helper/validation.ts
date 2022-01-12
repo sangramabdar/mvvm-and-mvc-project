@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
-import { newType } from "../entity/user/user.entity";
 
 import { WrongContent } from "./exceptions";
 
@@ -44,7 +43,7 @@ async function validateBody(request: Request, $: Response, next) {
 }
 
 async function validateSchema<T>(
-  entity: newType<T>,
+  entity: any,
   body: {},
   method: "POST" | "PUT"
 ): Promise<{}> {
@@ -58,14 +57,7 @@ async function validateSchema<T>(
         if (!(key in body)) {
           throw new Error(`${key} must be there`);
         }
-
-        if (typeof body[key] !== entity[key].type) {
-          throw new Error(`${key} must be ${entity[key].type}`);
-        }
-
-        if (!entity[key].condition(body[key])) {
-          throw new Error(entity[key].error);
-        }
+        entity[key].schema.validate(body[key]);
         newObject[key] = body[key];
       }
       break;
@@ -74,13 +66,7 @@ async function validateSchema<T>(
       var keys = Object.keys(body);
       for (let key of keys) {
         if (key in entity) {
-          if (typeof body[key] !== entity[key].type) {
-            throw new Error(`${key} must be ${entity[key]}`);
-          }
-
-          if (!entity[key].condition(body[key])) {
-            throw new Error(entity[key].error);
-          }
+          entity[key].schema.validate(body[key]);
           newObject[key] = body[key];
         }
       }

@@ -32,4 +32,4 @@ async function errorMiddleWare(error, request, response, next) {
   return response.json(responseBody);
 }
 
-export { errorMiddleWare };
+export { errorMiddleWare, statusCodeHandler };
