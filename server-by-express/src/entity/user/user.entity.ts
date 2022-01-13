@@ -25,21 +25,12 @@ type newType<T> = {
   [K in keyof T]: Prop<T[K]>;
 };
 
-const UserSchema: newType<Partial<UserEntity>> = {
+const UserSchema = {
   name: {
-    schema: new StringSchema("address").max(12).min(2).onlyAplhabates(),
+    schema: new StringSchema("name").max(12).min(2).onlyAplhabates(),
   },
   age: {
     schema: new NumberSchema("age").notNegative().max(100).min(18),
-  },
-  gender: {
-    schema: new StringSchema("gender").of(["male", "female"]),
-  },
-  address: {
-    schema: new StringSchema("address").max(12).min(2),
-  },
-  email: {
-    schema: new StringSchema("email").email(),
   },
 };
 

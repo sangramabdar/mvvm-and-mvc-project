@@ -7,7 +7,7 @@ import {
 import { Repository } from "../Repository/repository";
 
 interface EntityService<E> {
-  getEntity(id: string): Promise<any>;
+  getEntity(id: string): Promise<E>;
   getAllEntities(): Promise<E[]>;
   addEntity(entity: E);
   updateEntity(id: string, entity: E);

@@ -48,4 +48,4 @@ export default class Counter extends React.Component<{}, { count: number }> {
   }
 }
 
-ReactDOM.render(<Counter />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"));

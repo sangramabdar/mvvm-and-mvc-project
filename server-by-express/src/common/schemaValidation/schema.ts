@@ -62,13 +62,15 @@ class StringSchema extends Schema<string> {
     this.type = "string";
   }
 
-  #max = (name: string) => name.length <= this.maxLength;
-  #min = (name: string) => name.length >= this.minLength;
+  #max = (name: string) => name.trimStart().trimEnd().length <= this.maxLength;
+  #min = (name: string) => name.trimStart().trimEnd().length >= this.minLength;
 
   #onlyAlphabates = (name: string) => {
+    let newData = name.trimStart().trimEnd();
+
     let format = /^[A-Za-z]+$/;
 
-    if (!format.test(name)) return false;
+    if (!format.test(newData)) return false;
 
     return true;
   };

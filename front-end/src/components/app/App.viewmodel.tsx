@@ -25,7 +25,7 @@ function AppViewModel() {
   };
 
   const getUsers = async () => {
-    const result = await userRepository.get();
+    const result = await userRepository.getAll();
     if (result.error) {
       setError(result.error);
       return;
@@ -68,7 +68,9 @@ function AppViewModel() {
   };
 
   const updateUserById = async (id: string) => {
+    console.log(id);
     const user = { ...info };
+    console.log(user);
     const result = await userRepository.updateById(id, user);
     if (result.error) {
       setError(result.error);

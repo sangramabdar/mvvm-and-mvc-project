@@ -22,9 +22,7 @@ class EntityControllerImpl<E, T extends EntityService<E>>
       console.log(request.params);
       const id = request.params["id"];
       const result = await this.entityService.getEntity(id);
-      const responseBody = new ResponseBodyBuilder<Document>().setPayload(
-        result
-      );
+      const responseBody = new ResponseBodyBuilder<E>().setPayload(result);
       return response.json(responseBody);
     } catch (error) {
       let responseBody = new ResponseBodyBuilder<string>(error.message);

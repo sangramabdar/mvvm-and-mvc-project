@@ -54,7 +54,7 @@ class BookController {
     try {
       const id = request.params["id"];
       const result = await BookController.bookService.getEntity(id);
-      const responseBody = new ResponseBodyBuilder<Document>().setPayload(
+      const responseBody = new ResponseBodyBuilder<BookEntity>().setPayload(
         result
       );
       return response.json(responseBody);

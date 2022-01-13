@@ -1,9 +1,8 @@
-import axios from "axios";
-
 import { ResultType, Result } from "../helper/result";
 
 interface IRepository<T> {
   get(): Promise<ResultType<T[]>>;
+  getAll(): Promise<ResultType<T[]>>;
   add(element: T): Promise<ResultType<T>>;
   deleteById(id: string): Promise<ResultType<T>>;
   updateById(id: string, element: T): Promise<ResultType<T>>;
@@ -17,25 +16,54 @@ class Repository<T> implements IRepository<T> {
 
   async get(): Promise<ResultType<T[]>> {
     try {
-      const response = await axios.get(this.URL);
-      if (response.status == 404) {
-        return Result(response.statusText, null);
+      const response = await fetch(this.URL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log(data.payload);
+      if (response.status === 200) {
+        return Result("", [data.payload]);
       }
-      const result = await response.data;
-
-      return Result(null, result);
+      return Result("", []);
     } catch (error) {
       return Result(error.message);
     }
   }
 
+  async getAll(): Promise<ResultType<T[]>> {
+    try {
+      const response = await fetch(this.URL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (response.status === 200) {
+        return Result("", data.payload);
+      }
+      return Result("", []);
+    } catch (error) {
+      return Result(error.message);
+    }
+  }
   async add(element: T): Promise<ResultType<T>> {
     try {
-      const response = await axios.post(this.URL, element);
-
-      const result = await response.data;
-
-      return Result(result);
+      const response = await fetch(this.URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(element),
+      });
+      const data = await response.json();
+      if (response.status === 201) {
+        return Result("", data.payload);
+      }
+      return Result(data.error, null);
     } catch (error) {
       return Result(error.message);
     }
@@ -43,13 +71,18 @@ class Repository<T> implements IRepository<T> {
 
   async deleteById(id: string): Promise<ResultType<T>> {
     try {
-      const response = await axios.delete(this.URL, {
-        data: { id },
+      console.log(this.URL + "/" + id);
+      const response = await fetch(this.URL + "/" + id, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-
-      const result = await response.data;
-
-      return Result(result);
+      const data = await response.json();
+      if (response.status === 200) {
+        return Result("", data.payload);
+      }
+      return Result(data.error, null);
     } catch (error) {
       return Result(error.message);
     }
@@ -57,14 +90,20 @@ class Repository<T> implements IRepository<T> {
 
   async updateById(id: string, element: T): Promise<ResultType<T>> {
     try {
-      const response = await axios.put(this.URL, {
-        id,
-        value: element,
+      console.log(this.URL + "/" + id);
+      const response = await fetch(this.URL + "/" + id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(element),
       });
 
-      const result = await response.data;
-
-      return Result(result);
+      const data = await response.json();
+      if (response.status === 200) {
+        return Result("", data.payload);
+      }
+      return Result(data.error);
     } catch (error) {
       return Result(error.message);
     }
