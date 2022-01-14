@@ -22,16 +22,12 @@ interface Prop<T> {
 }
 
 type newType<T> = {
-  [K in keyof T]: Prop<T[K]>;
+  [K in keyof T]: Schema<T[K]>;
 };
 
-const UserSchema = {
-  name: {
-    schema: new StringSchema("name").max(12).min(2).onlyAplhabates(),
-  },
-  age: {
-    schema: new NumberSchema("age").notNegative().max(100).min(18),
-  },
+const UserSchema: newType<Partial<UserEntity>> = {
+  name: new StringSchema("name").max(12).min(2).onlyAplhabates(),
+  age: new NumberSchema("age").notNegative().max(100).min(18),
 };
 
 async function validateUserSchema(request: Request, response: Response, next) {

@@ -1,4 +1,4 @@
-import { Repository } from "./Respository";
+import { Repository, RepositoryImpl } from "./Respository";
 
 export type User = {
   _id?: string;
@@ -6,7 +6,7 @@ export type User = {
   age: number;
 };
 
-class UserRespository extends Repository<User> {
+class UserRespository extends RepositoryImpl<User> {
   private static USER_URL = "http://localhost:8080/users";
 
   constructor() {

@@ -1,6 +1,6 @@
 import { ResultType, Result } from "../helper/result";
 
-interface IRepository<T> {
+interface Repository<T> {
   get(): Promise<ResultType<T[]>>;
   getAll(): Promise<ResultType<T[]>>;
   add(element: T): Promise<ResultType<T>>;
@@ -8,7 +8,7 @@ interface IRepository<T> {
   updateById(id: string, element: T): Promise<ResultType<T>>;
 }
 
-class Repository<T> implements IRepository<T> {
+class RepositoryImpl<T> implements Repository<T> {
   protected URL = "";
   constructor(url: string) {
     this.URL = url;
@@ -90,7 +90,6 @@ class Repository<T> implements IRepository<T> {
 
   async updateById(id: string, element: T): Promise<ResultType<T>> {
     try {
-      console.log(this.URL + "/" + id);
       const response = await fetch(this.URL + "/" + id, {
         method: "PUT",
         headers: {
@@ -109,4 +108,4 @@ class Repository<T> implements IRepository<T> {
     }
   }
 }
-export { Repository, IRepository };
+export { RepositoryImpl, Repository };

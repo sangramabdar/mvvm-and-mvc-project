@@ -1,25 +1,7 @@
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
-import { Schema } from "../common/schemaValidation/schema";
-import { newType } from "../entity/user/user.entity";
 
 import { WrongContent } from "./exceptions";
-
-// async function keysValidation(keys: string[], entity: any) {
-//   let dataKeys = Object.keys(entity);
-
-//   let newData = {};
-//   dataKeys.forEach(key => {
-//     newData[key.toLowerCase()] = entity[key];
-//   });
-
-//   for (let key of keys) {
-//     if (!newData[key]) {
-//       throw new WrongContent("some information is not provided");
-//     }
-//   }
-//   return newData;
-// }
 
 async function validateId(request: Request, response: Response, next) {
   try {
@@ -44,7 +26,7 @@ async function validateBody(request: Request, $: Response, next) {
   }
 }
 
-async function validateSchema(
+async function validateSchema<T>(
   entity: {},
   body: {},
   method: "POST" | "PUT"
@@ -59,7 +41,7 @@ async function validateSchema(
         if (!(key in body)) {
           throw new Error(`${key} must be there`);
         }
-        entity[key].schema.validate(body[key]);
+        entity[key].validate(body[key]);
         newObject[key] = body[key];
       }
       break;
@@ -69,7 +51,7 @@ async function validateSchema(
 
       for (let key of keys) {
         if (key in entity) {
-          entity[key].schema.validate(body[key]);
+          entity[key].validate(body[key]);
           newObject[key] = body[key];
         }
       }
