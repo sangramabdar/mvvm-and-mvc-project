@@ -1,26 +1,25 @@
 import { Router } from "express";
 import { dependencies } from "../../config/dependencies";
 import { validateBody, validateId } from "../../helper/validation";
-import { UserController } from "./user.controller";
 import { validateUserSchema } from "./user.entity";
 
 const UserRouter = Router();
 
-UserRouter.get("/", dependencies.userController.getUsers);
-UserRouter.get("/:id", validateId, dependencies.userController.getUser);
+UserRouter.get("/", dependencies.userController.getAllEntities);
+UserRouter.get("/:id", validateId, dependencies.userController.getEntity);
 UserRouter.post(
   "/",
   validateBody,
   validateUserSchema,
-  dependencies.userController.addUser
+  dependencies.userController.addEntity
 );
 UserRouter.put(
   "/:id",
   validateId,
   validateBody,
   validateUserSchema,
-  dependencies.userController.updateUser
+  dependencies.userController.updateEntity
 );
-UserRouter.delete("/:id", validateId, dependencies.userController.deleteUser);
+UserRouter.delete("/:id", validateId, dependencies.userController.deleteEntity);
 
 export default UserRouter;

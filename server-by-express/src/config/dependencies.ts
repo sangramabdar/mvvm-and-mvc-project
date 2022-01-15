@@ -1,5 +1,11 @@
-import BookController from "../entity/book/book.controller";
-import { UserController } from "../entity/user/user.controller";
+import {
+  BookController,
+  BookControllerImpl,
+} from "../entity/book/book.controller";
+import {
+  UserController,
+  UserControllerImpl,
+} from "../entity/user/user.controller";
 
 type DependencyType = {
   userController: UserController;
@@ -7,12 +13,13 @@ type DependencyType = {
 };
 
 let dependencies: DependencyType = {
-  userController: new UserController(),
-  bookController: new BookController(),
+  userController: new UserControllerImpl(),
+  bookController: new BookControllerImpl(),
 };
 
 async function initDependencies() {
   console.log("dependencies initialized");
+  console.log(dependencies);
 }
 
 export { dependencies, initDependencies };

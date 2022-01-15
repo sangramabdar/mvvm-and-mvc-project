@@ -24,6 +24,7 @@ type newType<T> = {
 const UserSchema: newType<Partial<UserEntity>> = {
   name: new StringSchema("name").max(12).min(2).onlyAplhabates(),
   age: new NumberSchema("age").notNegative().max(100).min(18),
+  email: new StringSchema("email").email(),
 };
 
 async function validateUserSchema(request: Request, response: Response, next) {
