@@ -17,10 +17,6 @@ interface UserEntity extends BaseEntity {
   email: string;
 }
 
-interface Prop<T> {
-  schema: Schema<T>;
-}
-
 type newType<T> = {
   [K in keyof T]: Schema<T[K]>;
 };
@@ -43,4 +39,4 @@ async function validateUserSchema(request: Request, response: Response, next) {
   }
 }
 
-export { UserEntity, UserSchema, Prop, newType, validateUserSchema };
+export { UserEntity, UserSchema, newType, validateUserSchema };

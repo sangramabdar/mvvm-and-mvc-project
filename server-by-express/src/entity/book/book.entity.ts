@@ -11,12 +11,9 @@ interface BookEntity extends BaseEntity {
 }
 
 const BookSchema: newType<Partial<BookEntity>> = {
-  name: {
-    schema: new StringSchema("name").max(12).min(2).onlyAplhabates(),
-  },
-  isbn: {
-    schema: new StringSchema("isbn").min(10).max(20).onlyDigits(),
-  },
+  name: new StringSchema("name").max(12).min(2).onlyAplhabates(),
+
+  isbn: new StringSchema("isbn").min(10).max(20).onlyDigits(),
 };
 
 async function validateBookSchema(request: Request, response: Response, next) {

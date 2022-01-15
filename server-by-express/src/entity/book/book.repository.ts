@@ -9,7 +9,7 @@ interface BookRepository<T> extends Repository<T> {}
 
 class BookRepositoryImpl
   extends RepositoryImpl<BookEntity>
-  implements BookRepository<BaseEntity>
+  implements BookRepository<BookEntity>
 {
   private static collection = "book";
   constructor() {

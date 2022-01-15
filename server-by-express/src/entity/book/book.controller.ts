@@ -4,56 +4,59 @@ import { BookService, BookServiceImpl } from "./book.service";
 import { BookEntity } from "./book.repository";
 
 class BookController {
-  private static bookService: BookService = new BookServiceImpl();
+  private bookService: BookService;
+  constructor() {
+    this.bookService = new BookServiceImpl();
+  }
 
-  static async getBooks(request: Request, response: Response, next) {
+  getBooks = async (request: Request, response: Response, next) => {
     try {
-      const result = await BookController.bookService.getAllEntities();
+      const result = await this.bookService.getAllEntities();
       let responseBody = new ResponseBodyBuilder<BookEntity[]>("", result);
       return response.json(responseBody);
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  static async addBook(request: Request, response: Response, next) {
+  addBook = async (request: Request, response: Response, next) => {
     try {
       const book = request.body;
-      const result = await BookController.bookService.addEntity(book);
+      const result = await this.bookService.addEntity(book);
       let responseBody = new ResponseBodyBuilder<string>("", result);
       return response.status(201).json(responseBody);
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  static async updateBook(request: Request, response: Response, next) {
+  updateBook = async (request: Request, response: Response, next) => {
     try {
       const id = request.params["id"];
       const book: BookEntity = request.body;
-      const result = await BookController.bookService.updateEntity(id, book);
+      const result = await this.bookService.updateEntity(id, book);
       const responseBody = new ResponseBodyBuilder<string>("", result);
       return response.json(responseBody);
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  static async deleteBook(request: Request, response: Response, next) {
+  deleteBook = async (request: Request, response: Response, next) => {
     try {
       const id = request.params["id"];
-      const result = await BookController.bookService.deleteEntity(id);
+      const result = await this.bookService.deleteEntity(id);
       const responseBody = new ResponseBodyBuilder<string>("", result);
       return response.json(responseBody);
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  static async getBook(request: Request, response: Response, next) {
+  getBook = async (request: Request, response: Response, next) => {
     try {
       const id = request.params["id"];
-      const result = await BookController.bookService.getEntity(id);
+      const result = await this.bookService.getEntity(id);
       const responseBody = new ResponseBodyBuilder<BookEntity>().setPayload(
         result
       );
@@ -61,12 +64,12 @@ class BookController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  static async wrongRoute(request: Request, response: Response) {
+  wrongRoute = async (request: Request, response: Response) => {
     console.log("wrong");
     return response.status(404).json({ result: "wrong route" });
-  }
+  };
 }
 
 export default BookController;

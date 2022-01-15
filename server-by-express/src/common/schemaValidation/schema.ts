@@ -67,7 +67,6 @@ class StringSchema extends Schema<string> {
 
   #onlyAlphabates = (name: string) => {
     let newData = name.trimStart().trimEnd();
-
     let format = /^[A-Za-z]+$/;
 
     if (!format.test(newData)) return false;
