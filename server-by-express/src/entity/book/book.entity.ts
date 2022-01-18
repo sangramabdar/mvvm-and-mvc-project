@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
-import { StringSchema } from "../../common/schemaValidation/schema";
-import { validateSchema } from "../../helper/validation";
+import {
+  SchemaObject,
+  StringSchema,
+  validateSchema,
+} from "../../common/schemaValidation/schema";
 import BaseEntity from "../baseEntity";
-import { newType } from "../user/user.entity";
+import {  UserEntity } from "../user/user.entity";
 
 interface BookEntity extends BaseEntity {
   name: string;
@@ -10,11 +13,9 @@ interface BookEntity extends BaseEntity {
   date: Date;
 }
 
-const BookSchema: newType<Partial<BookEntity>> = {
-  name: new StringSchema("name").max(12).min(2).onlyAplhabates(),
+const BookSchema = SchemaObject<UserEntity>({
 
-  isbn: new StringSchema("isbn").min(10).max(20).onlyDigits(),
-};
+})
 
 async function validateBookSchema(request: Request, response: Response, next) {
   try {

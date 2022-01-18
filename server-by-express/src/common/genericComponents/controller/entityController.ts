@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { statusCodeHandler } from "../../../helper/errorMiddleWare";
-import ResponseBodyBuilder from "../../../helper/responseBodyBuilder";
+import ResponseBodyBuilder from "../../helper/responseBodyBuilder";
 import { EntityService } from "../service/entityServive";
 
 interface EntityController<T> {

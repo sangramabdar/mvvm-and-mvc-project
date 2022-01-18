@@ -26,38 +26,4 @@ async function validateBody(request: Request, $: Response, next) {
   }
 }
 
-async function validateSchema<T>(
-  entity: {},
-  body: {},
-  method: "POST" | "PUT"
-): Promise<{}> {
-  let newObject = {};
-
-  switch (method) {
-    case "POST":
-      var keys = Object.keys(entity);
-
-      for (let key of keys) {
-        if (!(key in body)) {
-          throw new Error(`${key} must be there`);
-        }
-        entity[key].validate(body[key]);
-        newObject[key] = body[key];
-      }
-      break;
-
-    case "PUT":
-      var keys = Object.keys(body);
-
-      for (let key of keys) {
-        if (key in entity) {
-          entity[key].validate(body[key]);
-          newObject[key] = body[key];
-        }
-      }
-      break;
-  }
-  return newObject;
-}
-
-export { validateId, validateBody, validateSchema };
+export { validateId, validateBody };

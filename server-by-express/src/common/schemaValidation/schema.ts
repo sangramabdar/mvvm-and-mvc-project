@@ -3,6 +3,14 @@ type CallBack<T> = {
   error: string;
 };
 
+type SchemaType<T> = {
+  [K in keyof T]: Schema<T[K]>;
+};
+
+function SchemaObject<T = {}>(schema: SchemaType<Partial<T>>) {
+  return schema;
+}
+
 class Schema<T> {
   protected callbacks: Array<CallBack<T>> = [];
   protected type: string = "";
@@ -93,7 +101,7 @@ class StringSchema extends Schema<string> {
     this.maxLength = length;
     this.callbacks.push({
       callback: this.#max,
-      error: `name should contain at least ${length} characters,`,
+      error: `name should contain at most ${length} characters,`,
     });
     return this;
   }
@@ -102,7 +110,7 @@ class StringSchema extends Schema<string> {
     this.minLength = length;
     this.callbacks.push({
       callback: this.#min,
-      error: `name should contain at most ${length} characters,`,
+      error: `name should contain at least ${length} characters,`,
     });
     return this;
   }
@@ -172,4 +180,38 @@ class NumberSchema extends Schema<number> {
   }
 }
 
-export { Schema, StringSchema, NumberSchema };
+async function validateSchema<T>(
+  entity: {},
+  body: {},
+  method: "POST" | "PUT"
+): Promise<{}> {
+  let newObject = {};
+
+  switch (method) {
+    case "POST":
+      var keys = Object.keys(entity);
+
+      for (let key of keys) {
+        if (!(key in body)) {
+          throw new Error(`${key} must be there`);
+        }
+        entity[key].validate(body[key]);
+        newObject[key] = body[key];
+      }
+      break;
+
+    case "PUT":
+      var keys = Object.keys(body);
+
+      for (let key of keys) {
+        if (key in entity) {
+          entity[key].validate(body[key]);
+          newObject[key] = body[key];
+        }
+      }
+      break;
+  }
+  return newObject;
+}
+
+export { Schema, StringSchema, NumberSchema, validateSchema, SchemaObject };
